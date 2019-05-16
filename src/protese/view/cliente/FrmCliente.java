@@ -1,0 +1,569 @@
+package protese.view.cliente;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import protese.dao.cliente.ClienteContatoDao;
+import protese.dao.cliente.ClienteDao;
+import protese.dao.cliente.ClienteEnderecoDao;
+import protese.dao.cliente.ContatoDao;
+import protese.dao.cliente.EnderecoDao;
+import protese.model.cliente.Cliente;
+import protese.model.cliente.ClienteContato;
+import protese.model.cliente.ClienteEndereco;
+import protese.model.cliente.Contato;
+import protese.model.cliente.Endereco;
+
+/**
+ *
+ * @author vinihds
+ */
+public class FrmCliente extends javax.swing.JFrame {
+
+    private ClienteDao clienteDao = ClienteDao.getInstance();
+    private ContatoDao contatoDao = ContatoDao.getInstance();
+    private ClienteContatoDao clienteContatoDao = ClienteContatoDao.getInstance();
+    private EnderecoDao enderecoDao = EnderecoDao.getInstance();
+    private ClienteEnderecoDao clienteEnderecoDao = ClienteEnderecoDao.getInstance();
+
+    private Cliente cliente = new Cliente();
+    private ClienteEndereco clienteEndereco = new ClienteEndereco();
+
+    private DefaultTableModel modelo = new DefaultTableModel();
+
+    private FrmCliente() {
+        initComponents();
+    }
+
+    public FrmCliente(Cliente cliente) {
+        initComponents();
+
+        this.cliente = cliente;
+
+        for (ClienteEndereco clienteEndereco : this.cliente.getClienteEnderecoList()) {
+            this.clienteEndereco = clienteEndereco;
+            break;
+        }
+
+        preencheCliente();
+        preencheEndereco();
+        preencheContatos();
+    }
+
+    private void preencheCliente() {
+        txtNome.setText(cliente.getNome());
+        txtRg.setText(cliente.getRg());
+        txtDocumento.setText(cliente.getDocumento());
+        txtEmail.setText(cliente.getEmail());
+    }
+
+    private void preencheEndereco() {
+        if (clienteEndereco.getId() != null) {
+            txtLogradouro.setText(clienteEndereco.getIdendereco().getLogradouro());
+            txtNumeroEndereco.setText(clienteEndereco.getIdendereco().getNumero());
+            txtBairro.setText(clienteEndereco.getIdendereco().getBairro());
+            txtComplemento.setText(clienteEndereco.getIdendereco().getComplemento());
+            txtCidade.setText(clienteEndereco.getIdendereco().getCidade());
+            comboEstado.setSelectedItem(clienteEndereco.getIdendereco().getEstado());
+            txtCep.setText(clienteEndereco.getIdendereco().getCep());
+        }
+    }
+
+    private void preencheContatos() {
+        txtDdi.setText("");
+        txtDdd.setText("");
+        txtNumeroContato.setText("");
+
+        modelo = (DefaultTableModel) tblContatos.getModel();
+        modelo.setRowCount(0);
+
+        for (ClienteContato clienteContato : cliente.getClienteContatoList()) {
+            modelo.addRow(new Object[]{
+                clienteContato.getId(),
+                clienteContato.getIdcontato().getDdi(),
+                clienteContato.getIdcontato().getDdd(),
+                clienteContato.getIdcontato().getNumero()});
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        btnFechar = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtRg = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtNome = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtDocumento = new javax.swing.JTextField();
+        txtEmail = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        btnSalvarCliente = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        txtLogradouro = new javax.swing.JTextField();
+        txtBairro = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        txtNumeroEndereco = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtCidade = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        comboEstado = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
+        btnSalvarEndereco = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        txtComplemento = new javax.swing.JTextField();
+        txtCep = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblContatos = new javax.swing.JTable();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel10 = new javax.swing.JLabel();
+        btnExcluirContato = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        txtDdi = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        txtDdd = new javax.swing.JTextField();
+        txtNumeroContato = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        btnSalvarContato = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cliente");
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(null);
+
+        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFechar.setText("Fechar");
+        btnFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFecharActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnFechar);
+        btnFechar.setBounds(600, 490, 140, 40);
+
+        jTabbedPane1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setLayout(null);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setText("RG");
+        jPanel2.add(jLabel1);
+        jLabel1.setBounds(10, 90, 130, 20);
+
+        txtRg.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel2.add(txtRg);
+        txtRg.setBounds(10, 110, 130, 40);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setText("Nome completo");
+        jPanel2.add(jLabel2);
+        jLabel2.setBounds(10, 10, 130, 20);
+
+        txtNome.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel2.add(txtNome);
+        txtNome.setBounds(10, 30, 720, 40);
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setText("CPF/CNPJ");
+        jPanel2.add(jLabel3);
+        jLabel3.setBounds(170, 90, 170, 20);
+
+        txtDocumento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel2.add(txtDocumento);
+        txtDocumento.setBounds(170, 110, 200, 40);
+
+        txtEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel2.add(txtEmail);
+        txtEmail.setBounds(10, 190, 720, 40);
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setText("Email");
+        jPanel2.add(jLabel4);
+        jLabel4.setBounds(10, 170, 130, 20);
+
+        btnSalvarCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarCliente.setText("Salvar");
+        btnSalvarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarClienteActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnSalvarCliente);
+        btnSalvarCliente.setBounds(10, 450, 140, 40);
+
+        jTabbedPane1.addTab("Dados cadastrais", jPanel2);
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setLayout(null);
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel5.setText("Logradouro");
+        jPanel3.add(jLabel5);
+        jLabel5.setBounds(10, 10, 130, 20);
+
+        txtLogradouro.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel3.add(txtLogradouro);
+        txtLogradouro.setBounds(10, 30, 720, 40);
+
+        txtBairro.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel3.add(txtBairro);
+        txtBairro.setBounds(170, 110, 240, 40);
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel6.setText("Bairro");
+        jPanel3.add(jLabel6);
+        jLabel6.setBounds(170, 90, 130, 20);
+
+        txtNumeroEndereco.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel3.add(txtNumeroEndereco);
+        txtNumeroEndereco.setBounds(10, 110, 130, 40);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setText("Número");
+        jPanel3.add(jLabel7);
+        jLabel7.setBounds(10, 90, 130, 20);
+
+        txtCidade.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel3.add(txtCidade);
+        txtCidade.setBounds(10, 190, 400, 40);
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel8.setText("Estado");
+        jPanel3.add(jLabel8);
+        jLabel8.setBounds(440, 170, 130, 20);
+
+        comboEstado.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        comboEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" }));
+        jPanel3.add(comboEstado);
+        comboEstado.setBounds(440, 190, 130, 40);
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel9.setText("Cidade");
+        jPanel3.add(jLabel9);
+        jLabel9.setBounds(10, 170, 130, 20);
+
+        btnSalvarEndereco.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarEndereco.setText("Salvar");
+        btnSalvarEndereco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarEnderecoActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnSalvarEndereco);
+        btnSalvarEndereco.setBounds(10, 450, 140, 40);
+
+        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel15.setText("Complemento");
+        jPanel3.add(jLabel15);
+        jLabel15.setBounds(440, 90, 130, 20);
+
+        txtComplemento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel3.add(txtComplemento);
+        txtComplemento.setBounds(440, 110, 290, 40);
+
+        txtCep.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel3.add(txtCep);
+        txtCep.setBounds(600, 190, 130, 40);
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel16.setText("CEP");
+        jPanel3.add(jLabel16);
+        jLabel16.setBounds(600, 170, 130, 20);
+
+        jTabbedPane1.addTab("Endereço", jPanel3);
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setLayout(null);
+
+        tblContatos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "DDI", "DDD", "Número"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblContatos.setRowHeight(25);
+        tblContatos.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblContatos);
+        if (tblContatos.getColumnModel().getColumnCount() > 0) {
+            tblContatos.getColumnModel().getColumn(0).setMinWidth(0);
+            tblContatos.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tblContatos.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
+
+        jPanel4.add(jScrollPane1);
+        jScrollPane1.setBounds(10, 200, 720, 240);
+        jPanel4.add(jSeparator1);
+        jSeparator1.setBounds(10, 170, 720, 10);
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel10.setText("Cadastrar novo contato");
+        jPanel4.add(jLabel10);
+        jLabel10.setBounds(10, 10, 210, 20);
+
+        btnExcluirContato.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExcluirContato.setText("Excluir");
+        btnExcluirContato.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirContatoActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnExcluirContato);
+        btnExcluirContato.setBounds(10, 450, 140, 40);
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel11.setText("Listagem dos contatos");
+        jPanel4.add(jLabel11);
+        jLabel11.setBounds(10, 180, 210, 20);
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel12.setText("DDI");
+        jPanel4.add(jLabel12);
+        jLabel12.setBounds(10, 40, 170, 20);
+
+        txtDdi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel4.add(txtDdi);
+        txtDdi.setBounds(10, 60, 170, 40);
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel13.setText("DDD");
+        jPanel4.add(jLabel13);
+        jLabel13.setBounds(200, 40, 170, 20);
+
+        txtDdd.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel4.add(txtDdd);
+        txtDdd.setBounds(200, 60, 170, 40);
+
+        txtNumeroContato.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel4.add(txtNumeroContato);
+        txtNumeroContato.setBounds(390, 60, 340, 40);
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel14.setText("Número");
+        jPanel4.add(jLabel14);
+        jLabel14.setBounds(390, 40, 340, 20);
+
+        btnSalvarContato.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarContato.setText("Salvar");
+        btnSalvarContato.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarContatoActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnSalvarContato);
+        btnSalvarContato.setBounds(10, 110, 120, 40);
+
+        jTabbedPane1.addTab("Contatos", jPanel4);
+
+        jPanel1.add(jTabbedPane1);
+        jTabbedPane1.setBounds(10, 10, 750, 530);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 754, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnFecharActionPerformed
+
+    private void btnSalvarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarClienteActionPerformed
+        cliente.setNome(txtNome.getText());
+        cliente.setRg(txtRg.getText());
+        cliente.setDocumento(txtDocumento.getText());
+        cliente.setEmail(txtEmail.getText());
+
+        cliente = clienteDao.salvar(cliente);
+
+        if (cliente.getId() != null && cliente.getId() > 0) {
+            JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSalvarClienteActionPerformed
+
+    private void btnSalvarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarEnderecoActionPerformed
+        Endereco endereco = new Endereco();
+
+        if (clienteEndereco.getId() != null && clienteEndereco.getId() > 0) {
+            endereco = clienteEndereco.getIdendereco();
+        }
+
+        endereco.setLogradouro(txtLogradouro.getText());
+        endereco.setNumero(txtNumeroEndereco.getText());
+        endereco.setBairro(txtBairro.getText());
+        endereco.setComplemento(txtComplemento.getText());
+        endereco.setCidade(txtCidade.getText());
+        endereco.setEstado(comboEstado.getSelectedItem().toString());
+        endereco.setCep(txtCep.getText());
+        endereco = enderecoDao.salvar(endereco);
+
+        if (clienteEndereco.getId() == null) {
+            clienteEndereco.setIdcliente(cliente);
+            clienteEndereco.setIdendereco(endereco);
+            clienteEndereco = clienteEnderecoDao.salvar(clienteEndereco);
+        }
+
+        if (clienteEndereco.getId() != null && clienteEndereco.getId() > 0) {
+            JOptionPane.showMessageDialog(this, "Endereço salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSalvarEnderecoActionPerformed
+
+    private void btnSalvarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarContatoActionPerformed
+        Contato contato = new Contato();
+
+        if (!txtNumeroContato.getText().trim().isEmpty()) {
+            contato.setDdi(txtDdi.getText());
+            contato.setDdd(txtDdd.getText());
+            contato.setNumero(txtNumeroContato.getText());
+            contato = contatoDao.salvar(contato);
+
+            ClienteContato clienteContato = new ClienteContato();
+            clienteContato.setIdcliente(cliente);
+            clienteContato.setIdcontato(contato);
+            clienteContato = clienteContatoDao.salvar(clienteContato);
+
+            if (clienteContato.getId() != null && clienteContato.getId() > 0) {
+                JOptionPane.showMessageDialog(this, "Contato salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+
+                preencheContatos();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Informe o número do contato para continuar!", "Contato", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSalvarContatoActionPerformed
+
+    private void btnExcluirContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirContatoActionPerformed
+        ClienteContato clienteContato;
+        int[] rows = tblContatos.getSelectedRows();
+
+        if (rows.length > 0) {
+            if (JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja realmente excluir estes contatos?",
+                    "Contatos",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+
+                try {
+                    for (int i = 0; i < rows.length; i++) {
+                        clienteContato = clienteContatoDao.consultarId(ClienteContato.class, Long.parseLong(tblContatos.getValueAt(rows[i], 0).toString()));
+
+                        clienteContatoDao.deletar(clienteContato);
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Contatos excluidos com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+                    preencheContatos();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }//GEN-LAST:event_btnExcluirContatoActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FrmCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FrmCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FrmCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrmCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FrmCliente().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExcluirContato;
+    private javax.swing.JButton btnFechar;
+    private javax.swing.JButton btnSalvarCliente;
+    private javax.swing.JButton btnSalvarContato;
+    private javax.swing.JButton btnSalvarEndereco;
+    private javax.swing.JComboBox<String> comboEstado;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable tblContatos;
+    private javax.swing.JTextField txtBairro;
+    private javax.swing.JTextField txtCep;
+    private javax.swing.JTextField txtCidade;
+    private javax.swing.JTextField txtComplemento;
+    private javax.swing.JTextField txtDdd;
+    private javax.swing.JTextField txtDdi;
+    private javax.swing.JTextField txtDocumento;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtLogradouro;
+    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtNumeroContato;
+    private javax.swing.JTextField txtNumeroEndereco;
+    private javax.swing.JTextField txtRg;
+    // End of variables declaration//GEN-END:variables
+}
