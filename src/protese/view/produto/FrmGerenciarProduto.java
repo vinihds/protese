@@ -66,12 +66,13 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Pesquisa");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(230, 10, 480, 20);
+        jLabel2.setBounds(220, 10, 80, 20);
 
         txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jPanel1.add(txtPesquisa);
-        txtPesquisa.setBounds(230, 30, 560, 40);
+        txtPesquisa.setBounds(220, 30, 580, 40);
 
+        btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPesquisarActionPerformed(evt);
@@ -106,7 +107,7 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         }
 
         jPanel1.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 90, 860, 450);
+        jScrollPane1.setBounds(10, 80, 860, 470);
 
         btnNovo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnNovo.setText("Novo");

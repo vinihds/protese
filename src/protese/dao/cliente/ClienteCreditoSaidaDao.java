@@ -6,6 +6,7 @@ import javax.persistence.Query;
 import protese.jpa.interfaces.Dao;
 import protese.model.cliente.Cliente;
 import protese.model.cliente.ClienteCreditoSaida;
+import protese.model.servico.ServicoPagamento;
 
 /**
  *
@@ -57,5 +58,14 @@ public class ClienteCreditoSaidaDao extends Dao<ClienteCreditoSaida> {
         resultset = query.getResultList();
 
         return resultset;
+    }
+
+    public ClienteCreditoSaida salvarClienteCreditoSaida(Cliente idcliente, ServicoPagamento servicoPagamento) {
+        ClienteCreditoSaida creditoSaida = new ClienteCreditoSaida();
+
+        creditoSaida.setIdcliente(idcliente);
+        creditoSaida.setIdservicoPagamento(servicoPagamento);
+
+        return salvar(creditoSaida);
     }
 }

@@ -191,6 +191,7 @@ public class FrmCliente extends javax.swing.JFrame {
         jLabel4.setBounds(10, 170, 130, 20);
 
         btnSalvarCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvarCliente.setText("Salvar");
         btnSalvarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,6 +253,7 @@ public class FrmCliente extends javax.swing.JFrame {
         jLabel9.setBounds(10, 170, 130, 20);
 
         btnSalvarEndereco.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarEndereco.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvarEndereco.setText("Salvar");
         btnSalvarEndereco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -320,6 +322,7 @@ public class FrmCliente extends javax.swing.JFrame {
         jLabel10.setBounds(10, 10, 210, 20);
 
         btnExcluirContato.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExcluirContato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-excluir-25.png"))); // NOI18N
         btnExcluirContato.setText("Excluir");
         btnExcluirContato.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -362,6 +365,7 @@ public class FrmCliente extends javax.swing.JFrame {
         jLabel14.setBounds(390, 40, 340, 20);
 
         btnSalvarContato.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarContato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvarContato.setText("Salvar");
         btnSalvarContato.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

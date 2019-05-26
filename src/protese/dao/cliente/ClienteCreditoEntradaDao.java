@@ -6,6 +6,7 @@ import javax.persistence.Query;
 import protese.jpa.interfaces.Dao;
 import protese.model.cliente.Cliente;
 import protese.model.cliente.ClienteCreditoEntrada;
+import protese.model.servico.Servico;
 
 /**
  *
@@ -47,15 +48,24 @@ public class ClienteCreditoEntradaDao extends Dao<ClienteCreditoEntrada> {
 
         Query query = createQuery("SELECT creditoEntrada FROM ClienteCreditoEntrada AS creditoEntrada "
                 + " INNER JOIN creditoEntrada.idcliente AS cliente "
-                + " INNER JOIN creditoEntrada.idservicoPagamento AS servicoPagamento "
-                + " INNER JOIN servicoPagamento.idpagamento AS pagamento "
+                + " INNER JOIN creditoEntrada.idservico AS servico "
                 + " WHERE creditoEntrada.excluido = false "
-                + " AND pagamento.excluido = false "
+                + " AND servico.excluido = false "
                 + " AND creditoEntrada.idcliente = :cliente");
         query.setParameter("cliente", cliente);
 
         resultset = query.getResultList();
 
         return resultset;
+    }
+
+    public ClienteCreditoEntrada salvarClienteCreditoEntrada(Cliente cliente, Servico servico, double valorCredito) {
+        ClienteCreditoEntrada creditoEntrada = new ClienteCreditoEntrada();
+        
+        creditoEntrada.setIdcliente(cliente);
+        creditoEntrada.setIdservico(servico);
+        creditoEntrada.setValorCredito(valorCredito);
+        
+        return salvar(creditoEntrada);
     }
 }

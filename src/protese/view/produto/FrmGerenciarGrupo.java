@@ -119,6 +119,7 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
         jPanel1.add(btnFechar);
         btnFechar.setBounds(440, 370, 140, 40);
 
+        btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPesquisarActionPerformed(evt);

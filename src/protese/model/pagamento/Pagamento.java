@@ -2,7 +2,7 @@ package protese.model.pagamento;
 
 import protese.model.servico.ServicoPagamento;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -18,8 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import protese.jpa.interfaces.Entidade;
@@ -45,14 +43,11 @@ public class Pagamento implements Serializable, Entidade {
     @Column(name = "valor")
     private Double valor;
     @Column(name = "data_lancamento")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataLancamento;
+    private LocalDateTime dataLancamento;
     @Column(name = "data_vencimento")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataVencimento;
+    private LocalDateTime dataVencimento;
     @Column(name = "data_pagamento")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataPagamento;
+    private LocalDateTime dataPagamento;
     @Basic(optional = false)
     @Column(name = "excluido")
     private boolean excluido;
@@ -95,27 +90,27 @@ public class Pagamento implements Serializable, Entidade {
         this.valor = valor;
     }
 
-    public Date getDataLancamento() {
+    public LocalDateTime getDataLancamento() {
         return dataLancamento;
     }
 
-    public void setDataLancamento(Date dataLancamento) {
+    public void setDataLancamento(LocalDateTime dataLancamento) {
         this.dataLancamento = dataLancamento;
     }
 
-    public Date getDataVencimento() {
+    public LocalDateTime getDataVencimento() {
         return dataVencimento;
     }
 
-    public void setDataVencimento(Date dataVencimento) {
+    public void setDataVencimento(LocalDateTime dataVencimento) {
         this.dataVencimento = dataVencimento;
     }
 
-    public Date getDataPagamento() {
+    public LocalDateTime getDataPagamento() {
         return dataPagamento;
     }
 
-    public void setDataPagamento(Date dataPagamento) {
+    public void setDataPagamento(LocalDateTime dataPagamento) {
         this.dataPagamento = dataPagamento;
     }
 

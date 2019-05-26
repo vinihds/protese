@@ -1,7 +1,9 @@
 package protese.model.produto;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,9 +14,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import protese.jpa.interfaces.Entidade;
+import protese.model.servico.ServicoDetalhe;
 
 /**
  *
@@ -45,6 +50,8 @@ public class ProdutoValor implements Serializable, Entidade {
     @JoinColumn(name = "idproduto", referencedColumnName = "idproduto")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Produto idproduto;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprodutoValor", fetch = FetchType.LAZY)
+    private List<ServicoDetalhe> servicoDetalheList;
 
     public ProdutoValor() {
     }
@@ -103,4 +110,20 @@ public class ProdutoValor implements Serializable, Entidade {
         this.idproduto = idproduto;
     }
 
+    @XmlTransient
+    public List<ServicoDetalhe> getServicoDetalheList() {
+        return servicoDetalheList;
+    }
+
+    public void setServicoDetalheList(List<ServicoDetalhe> servicoDetalheList) {
+        this.servicoDetalheList = servicoDetalheList;
+    }
+
+    public String getCodigoCompleto() {
+        if (this.idprodutoValor != null && this.idprodutoValor > 0) {
+            return this.idgrupo.getCodigo() + this.idproduto.getCodigo();
+        }
+
+        return "";
+    }
 }

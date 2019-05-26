@@ -1,13 +1,43 @@
 package protese.view.servico;
 
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import protese.dao.servico.ServicoDao;
+import protese.model.servico.Servico;
+import protese.util.utilidade.Utilidade;
+
 /**
  *
  * @author vinihds
  */
 public class FrmGerenciarServico extends javax.swing.JFrame {
 
+    private ServicoDao servicoDao = ServicoDao.getInstance();
+
+    private Utilidade utilidade = Utilidade.getInstance();
+    private DefaultTableModel modelo = new DefaultTableModel();
+
     public FrmGerenciarServico() {
         initComponents();
+
+        preencherTabela(servicoDao.retornaTodos());
+    }
+
+    private void preencherTabela(List<Servico> servicoList) {
+        modelo = (DefaultTableModel) tblServicos.getModel();
+        modelo.setRowCount(0);
+
+        for (Servico servico : servicoList) {
+            modelo.addRow(new Object[]{
+                servico.getId(),
+                servico.getTitulo(),
+                servico.getIdcliente().getNome(),
+                utilidade.sdfTimeStamp(servico.getDataCriacao()),
+                servico.getDataFinalizacao() != null ? utilidade.sdfTimeStamp(servico.getDataFinalizacao()) : "",
+                "R$ " + utilidade.decimalFormat(servico.getValorTotalServico())
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -17,7 +47,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblServicos = new javax.swing.JTable();
         btnNovo = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
@@ -27,7 +57,8 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         txtPesquisa = new javax.swing.JTextField();
         btnPesquisar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gerenciar serviços");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
@@ -37,7 +68,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         jPanel1.add(jLabel1);
         jLabel1.setBounds(10, 10, 140, 20);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblServicos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -53,13 +84,13 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setRowHeight(30);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(0);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(0);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblServicos.setRowHeight(30);
+        tblServicos.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblServicos);
+        if (tblServicos.getColumnModel().getColumnCount() > 0) {
+            tblServicos.getColumnModel().getColumn(0).setMinWidth(0);
+            tblServicos.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tblServicos.getColumnModel().getColumn(0).setMaxWidth(0);
         }
 
         jPanel1.add(jScrollPane1);
@@ -113,12 +144,13 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Pesquisa");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(240, 10, 220, 20);
+        jLabel2.setBounds(230, 10, 220, 20);
 
         txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jPanel1.add(txtPesquisa);
-        txtPesquisa.setBounds(240, 30, 630, 40);
+        txtPesquisa.setBounds(230, 30, 650, 40);
 
+        btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPesquisarActionPerformed(evt);
@@ -142,15 +174,56 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        // TODO add your handling code here:
+        int[] rows = tblServicos.getSelectedRows();
+
+        if (rows.length > 0) {
+            try {
+                Servico servico = servicoDao.consultarId(Servico.class, Long.parseLong(tblServicos.getValueAt(rows[0], 0).toString()));
+
+                FrmServico frm = new FrmServico(servico);
+                frm.setLocationRelativeTo(null);
+                frm.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        int[] rows = tblServicos.getSelectedRows();
+
+        if (rows.length > 0) {
+            if (JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja realmente excluir estes serviços?",
+                    "Serviço",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+
+                Servico servico;
+
+                try {
+                    for (int i = 0; i < rows.length; i++) {
+                        servico = servicoDao.consultarId(Servico.class, Long.parseLong(tblServicos.getValueAt(rows[i], 0).toString()));
+                        servicoDao.deletar(servico);
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Serviços excluidos com sucesso!", "Serviço", JOptionPane.INFORMATION_MESSAGE);
+
+                    preencherTabela(servicoDao.retornaTodos());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione os serviços para continuar!", "Serviço", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        // TODO add your handling code here:
+        FrmServico frm = new FrmServico(new Servico());
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
@@ -158,7 +231,12 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        // TODO add your handling code here:
+        switch (comboPesquisa.getSelectedIndex()) {
+            case 0:
+                preencherTabela(servicoDao.retornaTodos());
+            default:
+                preencherTabela(servicoDao.retornaTodos());
+        }
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     /**
@@ -207,7 +285,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblServicos;
     private javax.swing.JTextField txtPesquisa;
     // End of variables declaration//GEN-END:variables
 }

@@ -40,6 +40,9 @@ public class FormaPagamento implements Serializable, Entidade {
     @Column(name = "tipo")
     private String tipo;
     @Basic(optional = false)
+    @Column(name = "visivel")
+    private boolean visivel;
+    @Basic(optional = false)
     @Column(name = "excluido")
     private boolean excluido;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idformaPagamento", fetch = FetchType.LAZY)
@@ -84,6 +87,14 @@ public class FormaPagamento implements Serializable, Entidade {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public boolean getVisivel() {
+        return visivel;
+    }
+
+    public void setVisivel(boolean visivel) {
+        this.visivel = visivel;
     }
 
     public boolean getExcluido() {

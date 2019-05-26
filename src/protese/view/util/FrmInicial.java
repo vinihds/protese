@@ -2,8 +2,11 @@ package protese.view.util;
 
 import protese.view.cliente.FrmGerenciarCliente;
 import javax.swing.JFrame;
+import protese.model.servico.Servico;
 import protese.view.produto.FrmGerenciarGrupo;
 import protese.view.produto.FrmGerenciarProduto;
+import protese.view.servico.FrmGerenciarServico;
+import protese.view.servico.FrmServico;
 
 /**
  *
@@ -28,7 +31,9 @@ public class FrmInicial extends javax.swing.JFrame {
         menuGrupo = new javax.swing.JMenuItem();
         menuProduto = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuNovoServico = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        menuGerenciarServico = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dentista");
@@ -73,8 +78,24 @@ public class FrmInicial extends javax.swing.JFrame {
         jMenu2.setText("Serviço");
         jMenu2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
-        jMenuItem1.setText("jMenuItem1");
-        jMenu2.add(jMenuItem1);
+        menuNovoServico.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuNovoServico.setText("Novo serviço");
+        menuNovoServico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuNovoServicoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuNovoServico);
+        jMenu2.add(jSeparator1);
+
+        menuGerenciarServico.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuGerenciarServico.setText("Serviços");
+        menuGerenciarServico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuGerenciarServicoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuGerenciarServico);
 
         jMenuBar1.add(jMenu2);
 
@@ -111,6 +132,18 @@ public class FrmInicial extends javax.swing.JFrame {
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
     }//GEN-LAST:event_menuProdutoActionPerformed
+
+    private void menuNovoServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNovoServicoActionPerformed
+        FrmServico frm = new FrmServico(new Servico());
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
+    }//GEN-LAST:event_menuNovoServicoActionPerformed
+
+    private void menuGerenciarServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGerenciarServicoActionPerformed
+        FrmGerenciarServico frm = new FrmGerenciarServico();
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
+    }//GEN-LAST:event_menuGerenciarServicoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -151,10 +184,12 @@ public class FrmInicial extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuItem menuCliente;
+    private javax.swing.JMenuItem menuGerenciarServico;
     private javax.swing.JMenuItem menuGrupo;
+    private javax.swing.JMenuItem menuNovoServico;
     private javax.swing.JMenuItem menuProduto;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,4 +1,3 @@
-
 package protese.dao.servico;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import protese.model.servico.ServicoDetalhe;
  * @author vinihds
  */
 public class ServicoDetalheDao extends Dao<ServicoDetalhe> {
-    
+
     private static ServicoDetalheDao unique = null;
 
     private ServicoDetalheDao() {
@@ -43,14 +42,14 @@ public class ServicoDetalheDao extends Dao<ServicoDetalhe> {
         return servicoDetalhe;
     }
 
-    public List<Servico> retornaTodosPorServico(Servico servico) {
-        List<Servico> resultset = new ArrayList();
+    public List<ServicoDetalhe> retornaTodosPorServico(Servico servico) {
+        List<ServicoDetalhe> resultset = new ArrayList();
 
         Query query = createQuery("SELECT servicoDetalhe FROM ServicoDetalhe AS servicoDetalhe "
                 + " INNER JOIN servicoDetalhe.idservico AS servico "
                 + " WHERE servico.excluido = false "
                 + " AND servicoDetalhe.excluido = false "
-                + " ORDER BY servico.dataLancamento");
+                + " ORDER BY servicoDetalhe.dataLancamento");
 
         resultset = query.getResultList();
 

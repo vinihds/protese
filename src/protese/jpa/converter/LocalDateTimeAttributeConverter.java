@@ -3,11 +3,13 @@ package protese.jpa.converter;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 /**
  *
  * @author Vinicius
  */
+@Converter(autoApply = true)
 public class LocalDateTimeAttributeConverter implements AttributeConverter<LocalDateTime, Timestamp> {
 
     @Override

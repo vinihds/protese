@@ -160,6 +160,7 @@ public class FrmProduto extends javax.swing.JFrame {
         jPanel1.add(jScrollPane2);
         jScrollPane2.setBounds(10, 300, 650, 170);
 
+        btnExcluirValor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-excluir-25.png"))); // NOI18N
         btnExcluirValor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirValorActionPerformed(evt);
@@ -168,6 +169,7 @@ public class FrmProduto extends javax.swing.JFrame {
         jPanel1.add(btnExcluirValor);
         btnExcluirValor.setBounds(660, 400, 50, 50);
 
+        btnNovoValor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-soma-25.png"))); // NOI18N
         btnNovoValor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoValorActionPerformed(evt);
@@ -187,6 +189,7 @@ public class FrmProduto extends javax.swing.JFrame {
         btnFechar.setBounds(570, 480, 140, 40);
 
         btnSalvar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,6 +201,7 @@ public class FrmProduto extends javax.swing.JFrame {
         jPanel1.add(jSeparator1);
         jSeparator1.setBounds(10, 260, 700, 10);
 
+        btnAlterarValor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-editar-25.png"))); // NOI18N
         btnAlterarValor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAlterarValorActionPerformed(evt);

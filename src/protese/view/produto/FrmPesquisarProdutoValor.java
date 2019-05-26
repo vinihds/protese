@@ -1,39 +1,48 @@
-package protese.view.cliente;
+package protese.view.produto;
 
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import protese.dao.cliente.ClienteDao;
-import protese.model.cliente.Cliente;
+import protese.dao.produto.ProdutoValorDao;
+import protese.model.produto.ProdutoValor;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
  * @author vinihds
  */
-public class FrmPesquisarCliente extends javax.swing.JDialog {
+public class FrmPesquisarProdutoValor extends javax.swing.JDialog {
 
-    private ClienteDao clienteDao = ClienteDao.getInstance();
+    private ProdutoValorDao produtoValorDao = ProdutoValorDao.getInstance();
+    private Utilidade utilidade = Utilidade.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
 
-    private Cliente cliente = new Cliente();
+    private ProdutoValor produtoValor = new ProdutoValor();
 
-    public FrmPesquisarCliente(java.awt.Frame parent, boolean modal) {
+    /**
+     * Creates new form FrmPesquisarProdutoValor
+     */
+    public FrmPesquisarProdutoValor(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
-        preencherTabela(clienteDao.retornaTodos());
+
+        preencherTabela(produtoValorDao.retornaTodos());
     }
 
-    private void preencherTabela(List<Cliente> clienteList) {
-        modelo = (DefaultTableModel) tblCliente.getModel();
+    private void preencherTabela(List<ProdutoValor> produtoValorList) {
+        modelo = (DefaultTableModel) tblProdutoValor.getModel();
         modelo.setRowCount(0);
 
-        for (Cliente cliente : clienteList) {
-            modelo.addRow(new Object[]{cliente.getId(), cliente.getNome(), cliente.getDocumento()});
+        for (ProdutoValor produtoValor : produtoValorList) {
+            modelo.addRow(new Object[]{produtoValor.getId(),
+                produtoValor.getIdgrupo().getCodigo(),
+                produtoValor.getIdproduto().getCodigo(),
+                produtoValor.getIdproduto().getNome(),
+                "R$ " + utilidade.decimalFormat(produtoValor.getValor())});
         }
     }
 
-    public Cliente getCliente() {
-        return this.cliente;
+    public ProdutoValor getProdutoValor() {
+        return this.produtoValor;
     }
 
     @SuppressWarnings("unchecked")
@@ -41,26 +50,20 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        comboPesquisa = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         txtPesquisa = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnPesquisar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblCliente = new javax.swing.JTable();
+        tblProdutoValor = new javax.swing.JTable();
         btnFechar = new javax.swing.JButton();
         btnSelecionar = new javax.swing.JButton();
+        comboPesquisa = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Pesquisar cliente");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
-
-        comboPesquisa.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        comboPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Nome" }));
-        jPanel1.add(comboPesquisa);
-        comboPesquisa.setBounds(10, 30, 200, 40);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Pesquisar por");
@@ -74,7 +77,7 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Pesquisa");
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(220, 10, 90, 20);
+        jLabel3.setBounds(220, 10, 160, 20);
 
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
@@ -85,29 +88,33 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
         jPanel1.add(btnPesquisar);
         btnPesquisar.setBounds(660, 10, 60, 60);
 
-        tblCliente.setModel(new javax.swing.table.DefaultTableModel(
+        tblProdutoValor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Nome", "Documento"
+                "ID", "Cod Grupo", "Cod Produto", "Nome", "Valor"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblCliente.setRowHeight(30);
-        tblCliente.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(tblCliente);
-        if (tblCliente.getColumnModel().getColumnCount() > 0) {
-            tblCliente.getColumnModel().getColumn(0).setMinWidth(0);
-            tblCliente.getColumnModel().getColumn(0).setPreferredWidth(0);
-            tblCliente.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblProdutoValor.setRowHeight(30);
+        tblProdutoValor.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblProdutoValor);
+        if (tblProdutoValor.getColumnModel().getColumnCount() > 0) {
+            tblProdutoValor.getColumnModel().getColumn(0).setMinWidth(0);
+            tblProdutoValor.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tblProdutoValor.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblProdutoValor.getColumnModel().getColumn(1).setPreferredWidth(120);
+            tblProdutoValor.getColumnModel().getColumn(2).setPreferredWidth(120);
+            tblProdutoValor.getColumnModel().getColumn(3).setPreferredWidth(300);
+            tblProdutoValor.getColumnModel().getColumn(4).setPreferredWidth(160);
         }
 
         jPanel1.add(jScrollPane1);
@@ -133,6 +140,11 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
         jPanel1.add(btnSelecionar);
         btnSelecionar.setBounds(10, 350, 140, 40);
 
+        comboPesquisa.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        comboPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Nome", "Código próprio", "Grupo" }));
+        jPanel1.add(comboPesquisa);
+        comboPesquisa.setBounds(10, 30, 200, 40);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,7 +153,7 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
 
         pack();
@@ -150,32 +162,40 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         switch (comboPesquisa.getSelectedIndex()) {
             case 0:
-                preencherTabela(clienteDao.retornaTodos());
+                preencherTabela(produtoValorDao.retornaTodos());
 
                 break;
             case 1:
-                preencherTabela(clienteDao.retornaTodosPorNome(txtPesquisa.getText()));
+                preencherTabela(produtoValorDao.retornaTodosPorNome(txtPesquisa.getText()));
+
+                break;
+            case 2:
+                preencherTabela(produtoValorDao.retornaTodosPorCodigoProprio(txtPesquisa.getText()));
+
+                break;
+            case 3:
+                preencherTabela(produtoValorDao.retornaTodosPorGrupo(txtPesquisa.getText()));
 
                 break;
             default:
-                preencherTabela(clienteDao.retornaTodos());
+                preencherTabela(produtoValorDao.retornaTodos());
 
                 break;
         }
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        cliente = new Cliente();
+        produtoValor = new ProdutoValor();
 
         this.dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarActionPerformed
-        int[] rows = tblCliente.getSelectedRows();
+        int[] rows = tblProdutoValor.getSelectedRows();
 
         if (rows.length > 0) {
             try {
-                cliente = clienteDao.consultarId(Cliente.class, Long.parseLong(modelo.getValueAt(rows[0], 0).toString()));
+                produtoValor = produtoValorDao.consultarId(ProdutoValor.class, Long.parseLong(modelo.getValueAt(rows[0], 0).toString()));
 
                 this.dispose();
             } catch (Exception e) {
@@ -201,20 +221,20 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmPesquisarCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPesquisarProdutoValor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmPesquisarCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPesquisarProdutoValor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmPesquisarCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPesquisarProdutoValor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmPesquisarCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmPesquisarProdutoValor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                FrmPesquisarCliente dialog = new FrmPesquisarCliente(new javax.swing.JFrame(), true);
+                FrmPesquisarProdutoValor dialog = new FrmPesquisarProdutoValor(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -235,7 +255,7 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblCliente;
+    private javax.swing.JTable tblProdutoValor;
     private javax.swing.JTextField txtPesquisa;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,12 +1,26 @@
 package protese.view.servico;
 
-import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import protese.dao.pagamento.FormaPagamentoDao;
+import protese.dao.pagamento.PagamentoDao;
 import protese.dao.servico.ServicoDao;
+import protese.dao.servico.ServicoDetalheDao;
+import protese.dao.servico.ServicoPagamentoDao;
 import protese.model.cliente.Cliente;
+import protese.model.pagamento.FormaPagamento;
+import protese.model.pagamento.Pagamento;
 import protese.model.produto.ProdutoValor;
 import protese.model.servico.Servico;
+import protese.model.servico.ServicoDetalhe;
+import protese.model.servico.ServicoPagamento;
+import protese.util.utilidade.Utilidade;
 import protese.view.cliente.FrmPesquisarCliente;
+import protese.view.produto.FrmPesquisarProdutoValor;
 
 /**
  *
@@ -15,23 +29,36 @@ import protese.view.cliente.FrmPesquisarCliente;
 public class FrmServico extends javax.swing.JFrame {
 
     private ServicoDao servicoDao = ServicoDao.getInstance();
-    private DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00");
+    private ServicoDetalheDao servicoDetalheDao = ServicoDetalheDao.getInstance();
+    private PagamentoDao pagamentoDao = PagamentoDao.getInstance();
+    private ServicoPagamentoDao servicoPagamentoDao = ServicoPagamentoDao.getInstance();
+    private FormaPagamentoDao formaPagamentoDao = FormaPagamentoDao.getInstance();
+
+    private Utilidade utilidade = Utilidade.getInstance();
+    private DefaultTableModel modelo = new DefaultTableModel();
 
     private Servico servico = new Servico();
     private Cliente cliente = new Cliente();
     private ProdutoValor produtoValor = new ProdutoValor();
+    private List<FormaPagamento> formaPagamentoList = new ArrayList();
 
     private FrmServico() {
-
     }
 
     public FrmServico(Servico servico) {
         initComponents();
 
         this.servico = servico;
+        comboDataCriacao.setDate(new Date());
+        comboDataLancamento.setDate(new Date());
+        comboDataPagamento.setDate(new Date());
+        btnFinalizarServico.setVisible(false);
+        preencheFormaPagamentoList();
 
         if (this.servico.getId() != null && this.servico.getId() > 0) {
             cliente = servico.getIdcliente();
+
+            preencheServico();
             liberaAbas(true);
         } else {
             liberaAbas(false);
@@ -45,21 +72,78 @@ public class FrmServico extends javax.swing.JFrame {
         txtCodigoProduto.setEditable(false);
     }
 
+    private void preencheServico() {
+        txtTitulo.setText(servico.getTitulo());
+        comboDataCriacao.setDate(utilidade.asDate(servico.getDataCriacao()));
+        txtDescricao.setText(servico.getDescricao());
+
+        preencheCliente();
+        preencheValores();
+        preencheTabelaServicoDetalhe();
+        preencheTabelaServicoPagamento();
+        verificaServicoFinalizado();
+    }
+
     private void preencheCliente() {
         txtNomeCliente.setText(cliente.getNome());
+
+        lblValorCreditoCliente.setText("R$ " + utilidade.decimalFormat(cliente.getSaldoAtual()));
+    }
+
+    private void verificaServicoFinalizado() {
+        //Verificando finalização do serviço
+        if (servico.getDataFinalizacao() == null) {
+
+            if (servico.getId() != null && servico.getId() > 0 && servico.getRestantePagar() <= 0) {
+                //Não finalizado, totalmente pago
+                btnFinalizarServico.setVisible(true);
+            } else {
+                //Não finalizado, valor pendente
+                btnFinalizarServico.setVisible(false);
+            }
+        } else {
+            //btnSalvarServico.setEnabled(false);
+            btnFinalizarServico.setVisible(true);
+            btnFinalizarServico.setEnabled(false);
+
+            //Cliente
+            btnPesquisarCliente.setEnabled(false);
+
+            //Produto
+            btnPesquisarProduto.setEnabled(false);
+            btnLancarProduto.setEnabled(false);
+            btnExcluirProduto.setEnabled(false);
+
+            //Pagamento
+            btnLancarPagamento.setEnabled(false);
+            btnExcluirPagamento.setEnabled(false);
+        }
     }
 
     private void preencheProduto() {
-        //Produto
-        txtNomeProduto.setText(produtoValor.getIdproduto().getNome());
-        txtCodigoGrupo.setText(produtoValor.getIdgrupo().getCodigo());
-        txtCodigoProduto.setText(produtoValor.getIdproduto().getCodigo());
-        //Valor
-        lblValorUnitario.setText("R$ " + decimalFormat.format(produtoValor.getValor()));
-        txtQuantidadeProduto.setText("");
-        lblValorTotal.setText("R$ 0,00");
+        if (produtoValor.getId() != null && produtoValor.getId() > 0) {
+            //Produto
+            txtNomeProduto.setText(produtoValor.getIdproduto().getNome());
+            txtCodigoGrupo.setText(produtoValor.getIdgrupo().getCodigo());
+            txtCodigoProduto.setText(produtoValor.getIdproduto().getCodigo());
+            comboDataLancamento.setDate(new Date());
+            //Valor
+            lblValorUnitario.setText("R$ " + utilidade.decimalFormat(produtoValor.getValor()));
+            txtQuantidadeProduto.setText("1");
+            lblValorTotal.setText("R$ 0,00");
 
-        calculaValorNovoLancamento();
+            calculaValorNovoLancamento();
+        } else {
+            //Produto
+            txtNomeProduto.setText("");
+            txtCodigoGrupo.setText("");
+            txtCodigoProduto.setText("");
+            comboDataLancamento.setDate(new Date());
+            //Valor
+            lblValorUnitario.setText("R$ 0,00");
+            txtQuantidadeProduto.setText("1");
+            lblValorTotal.setText("R$ 0,00");
+        }
     }
 
     private void calculaValorNovoLancamento() {
@@ -72,24 +156,83 @@ public class FrmServico extends javax.swing.JFrame {
 
         valorTotal = produtoValor.getValor() * quantidade;
 
-        lblValorTotal.setText("R$ " + decimalFormat.format(valorTotal));
+        lblValorTotal.setText("R$ " + utilidade.decimalFormat(valorTotal));
     }
-    
+
     private void liberaAbas(boolean libera) {
         tabbedPaneServico.setEnabledAt(1, libera);
         tabbedPaneServico.setEnabledAt(2, libera);
     }
-    
-    private void calculaValorTotalServico() {
-        
+
+    private void preencheValores() {
+        double valorTotalServico = servico.getValorTotalServico();
+        double valorTotalPago = servico.getValorTotalPago();
+        double valorRestante = servico.getRestantePagar();
+
+        //Valor total
+        lblValorTotalServicoGeral.setText("R$ " + utilidade.decimalFormat(valorTotalServico));
+        lblValorTotalServico.setText("R$ " + utilidade.decimalFormat(valorTotalServico));
+
+        //Valor total pago
+        lblValorTotalPagoGeral.setText("R$ " + utilidade.decimalFormat(valorTotalPago));
+        lblValorTotalPago.setText("R$ " + utilidade.decimalFormat(valorTotalPago));
+
+        //Restante a pagar
+        lblRestantePagarGeral.setText("R$ " + utilidade.decimalFormat(valorRestante));
+        lblRestantePagar.setText("R$ " + utilidade.decimalFormat(valorRestante));
+
+        if (valorRestante < 0) {
+            //Crédito para o cliente
+        }
     }
-    
+
+    private void preencheTabelaServicoDetalhe() {
+        modelo = (DefaultTableModel) tblServicoDetalhe.getModel();
+        modelo.setRowCount(0);
+
+        for (ServicoDetalhe servicoDetalhe : servico.getServicoDetalheList()) {
+            modelo.addRow(new Object[]{
+                servicoDetalhe.getId(),
+                servicoDetalhe.getIdprodutoValor().getCodigoCompleto(),
+                servicoDetalhe.getIdprodutoValor().getIdproduto().getNome(),
+                utilidade.sdfTimeStamp(servicoDetalhe.getDataLancamento()),
+                "R$ " + utilidade.decimalFormat(servicoDetalhe.getIdprodutoValor().getValor()),
+                servicoDetalhe.getQuantidade(),
+                "R$ " + utilidade.decimalFormat(servicoDetalhe.getValorTotal())
+            });
+        }
+    }
+
+    private void preencheTabelaServicoPagamento() {
+        modelo = (DefaultTableModel) tblPagamentos.getModel();
+        modelo.setRowCount(0);
+
+        for (ServicoPagamento servicoPagamento : servico.getServicoPagamentoList()) {
+            modelo.addRow(new Object[]{
+                servicoPagamento.getId(),
+                servicoPagamento.getIdpagamento().getIdformaPagamento().getNome(),
+                utilidade.sdfTimeStamp(servicoPagamento.getIdpagamento().getDataLancamento()),
+                utilidade.sdfTimeStamp(servicoPagamento.getIdpagamento().getDataPagamento()),
+                "R$ " + utilidade.decimalFormat(servicoPagamento.getIdpagamento().getValor())
+            });
+        }
+    }
+
+    private void preencheFormaPagamentoList() {
+        formaPagamentoList = formaPagamentoDao.retornaTodos();
+
+        for (FormaPagamento formaPagamento : formaPagamentoList) {
+            comboFormaPagamento.addItem(formaPagamento.getNome());
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
+        btnFechar = new javax.swing.JButton();
         tabbedPaneServico = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         btnSalvarServico = new javax.swing.JButton();
@@ -107,14 +250,15 @@ public class FrmServico extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        lblRestantePagarGeral = new javax.swing.JLabel();
+        lblValorTotalServicoGeral = new javax.swing.JLabel();
+        lblValorTotalPagoGeral = new javax.swing.JLabel();
+        btnFinalizarServico = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        tblServicoDetalhe = new javax.swing.JTable();
+        btnExcluirProduto = new javax.swing.JButton();
+        btnLancarProduto = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel12 = new javax.swing.JLabel();
@@ -134,8 +278,27 @@ public class FrmServico extends javax.swing.JFrame {
         comboDataLancamento = new com.toedter.calendar.JDateChooser();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
+        lblValorTotalServico = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblPagamentos = new javax.swing.JTable();
+        jLabel10 = new javax.swing.JLabel();
+        btnExcluirPagamento = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JSeparator();
+        jLabel11 = new javax.swing.JLabel();
+        btnLancarPagamento = new javax.swing.JButton();
+        comboFormaPagamento = new javax.swing.JComboBox<>();
+        comboDataPagamento = new com.toedter.calendar.JDateChooser();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        txtValorPagamento = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        lblCreditoCliente = new javax.swing.JLabel();
+        lblValorCreditoCliente = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        lblValorTotalPago = new javax.swing.JLabel();
+        lblRestantePagar = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
 
         jLabel5.setText("jLabel5");
 
@@ -145,12 +308,23 @@ public class FrmServico extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
+        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFechar.setText("Fechar");
+        btnFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFecharActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnFechar);
+        btnFechar.setBounds(740, 560, 140, 40);
+
         tabbedPaneServico.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(null);
 
         btnSalvarServico.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarServico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvarServico.setText("Salvar");
         btnSalvarServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -181,6 +355,7 @@ public class FrmServico extends javax.swing.JFrame {
         jPanel2.add(jLabel2);
         jLabel2.setBounds(10, 10, 130, 20);
 
+        btnPesquisarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPesquisarClienteActionPerformed(evt);
@@ -197,6 +372,8 @@ public class FrmServico extends javax.swing.JFrame {
         txtNomeCliente.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jPanel2.add(txtNomeCliente);
         txtNomeCliente.setBounds(10, 110, 360, 40);
+
+        comboDataCriacao.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jPanel2.add(comboDataCriacao);
         comboDataCriacao.setBounds(450, 110, 420, 40);
         jPanel2.add(jSeparator1);
@@ -223,53 +400,96 @@ public class FrmServico extends javax.swing.JFrame {
         jPanel2.add(jLabel8);
         jLabel8.setBounds(380, 190, 120, 20);
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel10.setText("R$ 0,00");
-        jPanel2.add(jLabel10);
-        jLabel10.setBounds(600, 210, 270, 40);
+        lblRestantePagarGeral.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblRestantePagarGeral.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblRestantePagarGeral.setText("R$ 0,00");
+        jPanel2.add(lblRestantePagarGeral);
+        lblRestantePagarGeral.setBounds(600, 210, 270, 40);
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel11.setText("R$ 0,00");
-        jPanel2.add(jLabel11);
-        jLabel11.setBounds(10, 210, 270, 40);
+        lblValorTotalServicoGeral.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblValorTotalServicoGeral.setForeground(new java.awt.Color(255, 0, 0));
+        lblValorTotalServicoGeral.setText("R$ 0,00");
+        jPanel2.add(lblValorTotalServicoGeral);
+        lblValorTotalServicoGeral.setBounds(10, 210, 270, 40);
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 204, 0));
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setText("R$ 0,00");
-        jPanel2.add(jLabel13);
-        jLabel13.setBounds(300, 210, 270, 40);
+        lblValorTotalPagoGeral.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblValorTotalPagoGeral.setForeground(new java.awt.Color(0, 153, 51));
+        lblValorTotalPagoGeral.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblValorTotalPagoGeral.setText("R$ 0,00");
+        jPanel2.add(lblValorTotalPagoGeral);
+        lblValorTotalPagoGeral.setBounds(300, 210, 270, 40);
+
+        btnFinalizarServico.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFinalizarServico.setForeground(new java.awt.Color(0, 153, 51));
+        btnFinalizarServico.setText("Finalizar serviço!");
+        btnFinalizarServico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinalizarServicoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnFinalizarServico);
+        btnFinalizarServico.setBounds(340, 520, 200, 40);
 
         tabbedPaneServico.addTab("Dados do serviço", jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(null);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblServicoDetalhe.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Produto", "Nome", "Lançamento", "Valor unit", "Quantidade", "Valor total"
             }
-        ));
-        jTable1.setRowHeight(25);
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblServicoDetalhe.setRowHeight(25);
+        tblServicoDetalhe.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblServicoDetalhe);
+        if (tblServicoDetalhe.getColumnModel().getColumnCount() > 0) {
+            tblServicoDetalhe.getColumnModel().getColumn(0).setMinWidth(0);
+            tblServicoDetalhe.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tblServicoDetalhe.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblServicoDetalhe.getColumnModel().getColumn(1).setPreferredWidth(100);
+            tblServicoDetalhe.getColumnModel().getColumn(2).setPreferredWidth(200);
+            tblServicoDetalhe.getColumnModel().getColumn(3).setPreferredWidth(130);
+            tblServicoDetalhe.getColumnModel().getColumn(4).setPreferredWidth(80);
+            tblServicoDetalhe.getColumnModel().getColumn(5).setPreferredWidth(80);
+            tblServicoDetalhe.getColumnModel().getColumn(6).setPreferredWidth(80);
+        }
 
         jPanel3.add(jScrollPane1);
         jScrollPane1.setBounds(10, 250, 860, 260);
 
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton4.setText("Excluir");
-        jPanel3.add(jButton4);
-        jButton4.setBounds(10, 520, 140, 40);
+        btnExcluirProduto.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExcluirProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-excluir-25.png"))); // NOI18N
+        btnExcluirProduto.setText("Excluir");
+        btnExcluirProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirProdutoActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnExcluirProduto);
+        btnExcluirProduto.setBounds(10, 520, 140, 40);
 
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton5.setText("Lançar!");
-        jPanel3.add(jButton5);
-        jButton5.setBounds(10, 170, 140, 40);
+        btnLancarProduto.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnLancarProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
+        btnLancarProduto.setText("Lançar!");
+        btnLancarProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLancarProdutoActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnLancarProduto);
+        btnLancarProduto.setBounds(10, 170, 140, 40);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel9.setText("Listagem dos produtos deste serviço");
@@ -302,6 +522,7 @@ public class FrmServico extends javax.swing.JFrame {
         jPanel3.add(jLabel15);
         jLabel15.setBounds(630, 130, 100, 20);
 
+        btnPesquisarProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisarProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPesquisarProdutoActionPerformed(evt);
@@ -330,7 +551,7 @@ public class FrmServico extends javax.swing.JFrame {
         txtQuantidadeProduto.setBounds(740, 60, 130, 40);
 
         lblValorTotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lblValorTotal.setForeground(new java.awt.Color(255, 102, 0));
+        lblValorTotal.setForeground(new java.awt.Color(255, 0, 0));
         lblValorTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblValorTotal.setText("R$ 0,00");
         jPanel3.add(lblValorTotal);
@@ -339,7 +560,7 @@ public class FrmServico extends javax.swing.JFrame {
         jSeparator3.setBounds(620, 110, 250, 20);
 
         lblValorUnitario.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lblValorUnitario.setForeground(new java.awt.Color(255, 102, 0));
+        lblValorUnitario.setForeground(new java.awt.Color(255, 0, 0));
         lblValorUnitario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblValorUnitario.setText("R$ 0,00");
         jPanel3.add(lblValorUnitario);
@@ -359,6 +580,8 @@ public class FrmServico extends javax.swing.JFrame {
         jLabel20.setText("Data de lançamento");
         jPanel3.add(jLabel20);
         jLabel20.setBounds(270, 80, 170, 20);
+
+        comboDataLancamento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jPanel3.add(comboDataLancamento);
         comboDataLancamento.setBounds(270, 100, 290, 40);
 
@@ -370,17 +593,148 @@ public class FrmServico extends javax.swing.JFrame {
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel22.setText("Valor total do serviço");
         jPanel3.add(jLabel22);
-        jLabel22.setBounds(280, 530, 160, 20);
+        jLabel22.setBounds(290, 530, 150, 20);
 
-        jLabel23.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel23.setText("R$ 0,00");
-        jPanel3.add(jLabel23);
-        jLabel23.setBounds(440, 520, 190, 40);
+        lblValorTotalServico.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblValorTotalServico.setForeground(new java.awt.Color(255, 0, 0));
+        lblValorTotalServico.setText("R$ 0,00");
+        jPanel3.add(lblValorTotalServico);
+        lblValorTotalServico.setBounds(450, 520, 190, 40);
 
         tabbedPaneServico.addTab("Produtos vendidos", jPanel3);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setLayout(null);
+
+        tblPagamentos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Forma de pagamento", "Data de lançamento", "Data do pagamento", "Valor"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblPagamentos.setRowHeight(25);
+        tblPagamentos.getTableHeader().setReorderingAllowed(false);
+        jScrollPane3.setViewportView(tblPagamentos);
+        if (tblPagamentos.getColumnModel().getColumnCount() > 0) {
+            tblPagamentos.getColumnModel().getColumn(0).setMinWidth(0);
+            tblPagamentos.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tblPagamentos.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
+
+        jPanel4.add(jScrollPane3);
+        jScrollPane3.setBounds(10, 180, 860, 330);
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel10.setText("Listagem dos pagamentos deste serviço");
+        jPanel4.add(jLabel10);
+        jLabel10.setBounds(10, 160, 340, 20);
+
+        btnExcluirPagamento.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExcluirPagamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-excluir-25.png"))); // NOI18N
+        btnExcluirPagamento.setText("Excluir");
+        btnExcluirPagamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirPagamentoActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnExcluirPagamento);
+        btnExcluirPagamento.setBounds(10, 520, 140, 40);
+        jPanel4.add(jSeparator4);
+        jSeparator4.setBounds(10, 150, 860, 10);
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel11.setText("Restante a pagar");
+        jPanel4.add(jLabel11);
+        jLabel11.setBounds(720, 10, 150, 20);
+
+        btnLancarPagamento.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnLancarPagamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
+        btnLancarPagamento.setText("Lançar!");
+        btnLancarPagamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLancarPagamentoActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnLancarPagamento);
+        btnLancarPagamento.setBounds(10, 100, 140, 40);
+
+        comboFormaPagamento.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jPanel4.add(comboFormaPagamento);
+        comboFormaPagamento.setBounds(10, 30, 240, 40);
+
+        comboDataPagamento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jPanel4.add(comboDataPagamento);
+        comboDataPagamento.setBounds(270, 30, 240, 40);
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel13.setText("Forma de pagamento");
+        jPanel4.add(jLabel13);
+        jLabel13.setBounds(10, 10, 220, 20);
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel17.setText("Data do pagamento");
+        jPanel4.add(jLabel17);
+        jLabel17.setBounds(270, 10, 220, 20);
+
+        txtValorPagamento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtValorPagamento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtValorPagamentoKeyReleased(evt);
+            }
+        });
+        jPanel4.add(txtValorPagamento);
+        txtValorPagamento.setBounds(560, 30, 110, 40);
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel18.setText("R$");
+        jPanel4.add(jLabel18);
+        jLabel18.setBounds(530, 30, 30, 40);
+
+        lblCreditoCliente.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblCreditoCliente.setText("Crédito do cliente");
+        jPanel4.add(lblCreditoCliente);
+        lblCreditoCliente.setBounds(650, 130, 110, 20);
+
+        lblValorCreditoCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblValorCreditoCliente.setForeground(new java.awt.Color(0, 153, 51));
+        lblValorCreditoCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblValorCreditoCliente.setText("R$ 0,00");
+        jPanel4.add(lblValorCreditoCliente);
+        lblValorCreditoCliente.setBounds(760, 130, 110, 20);
+
+        jLabel25.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel25.setText("Valor total pago");
+        jPanel4.add(jLabel25);
+        jLabel25.setBounds(320, 530, 120, 20);
+
+        lblValorTotalPago.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblValorTotalPago.setForeground(new java.awt.Color(0, 153, 51));
+        lblValorTotalPago.setText("R$ 0,00");
+        jPanel4.add(lblValorTotalPago);
+        lblValorTotalPago.setBounds(450, 520, 190, 40);
+
+        lblRestantePagar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblRestantePagar.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblRestantePagar.setText("R$ 0,00");
+        jPanel4.add(lblRestantePagar);
+        lblRestantePagar.setBounds(700, 30, 170, 40);
+
+        jLabel24.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel24.setText("Valor do pagamento");
+        jPanel4.add(jLabel24);
+        jLabel24.setBounds(530, 10, 170, 20);
+
         tabbedPaneServico.addTab("Pagamentos realizados", jPanel4);
 
         jPanel1.add(tabbedPaneServico);
@@ -390,7 +744,7 @@ public class FrmServico extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 904, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 905, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -411,6 +765,12 @@ public class FrmServico extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPesquisarClienteActionPerformed
 
     private void btnPesquisarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarProdutoActionPerformed
+        FrmPesquisarProdutoValor frm = new FrmPesquisarProdutoValor(this, true);
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
+
+        produtoValor = frm.getProdutoValor();
+
         preencheProduto();
     }//GEN-LAST:event_btnPesquisarProdutoActionPerformed
 
@@ -433,13 +793,180 @@ public class FrmServico extends javax.swing.JFrame {
             servico.setIdcliente(cliente);
             servico.setTitulo(txtTitulo.getText());
             servico.setDescricao(txtDescricao.getText());
-            //servico.setDataCriacao();
+
+            //Cadastra a data de criação somente no momento de criação do serviço
+            //Ao alterar o serviço, essa data não será alterada
+            if (servico.getId() == null || servico.getId() == 0) {
+                servico.setDataCriacao(utilidade.asLocalDateTime(comboDataCriacao.getDate()));
+            }
+
             servico = servicoDao.salvar(servico);
-            
-            JOptionPane.showMessageDialog(this, "Serviço salvo com sucesso!", "Serviço", JOptionPane.INFORMATION_MESSAGE);
-            liberaAbas(true);
+
+            if (servico.getId() != null && servico.getId() > 0) {
+                JOptionPane.showMessageDialog(this, "Serviço salvo com sucesso!", "Serviço", JOptionPane.INFORMATION_MESSAGE);
+
+                liberaAbas(true);
+            }
         }
     }//GEN-LAST:event_btnSalvarServicoActionPerformed
+
+    private void btnLancarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLancarProdutoActionPerformed
+        if (produtoValor.getId() == null || produtoValor.getId() == 0) {
+            JOptionPane.showMessageDialog(this, "Selecione o produto para continuar!", "Produto", JOptionPane.WARNING_MESSAGE);
+        } else if (txtQuantidadeProduto.getText().isEmpty() || Double.parseDouble(txtQuantidadeProduto.getText()) == 0) {
+            JOptionPane.showMessageDialog(this, "Informe uma quantidade válida para continuar!", "Produto", JOptionPane.WARNING_MESSAGE);
+        } else {
+            ServicoDetalhe servicoDetalhe = new ServicoDetalhe();
+
+            servicoDetalhe.setIdservico(servico);
+            servicoDetalhe.setIdprodutoValor(produtoValor);
+            servicoDetalhe.setDataLancamento(utilidade.asLocalDateTime(comboDataLancamento.getDate()));
+            servicoDetalhe.setQuantidade(Double.parseDouble(txtQuantidadeProduto.getText()));
+            servicoDetalhe.setValorUnitario(produtoValor.getValor());
+            servicoDetalhe.setValorTotal(produtoValor.getValor() * servicoDetalhe.getQuantidade());
+            servicoDetalhe.setDescricao("");
+            servicoDetalhe = servicoDetalheDao.salvar(servicoDetalhe);
+
+            if (servicoDetalhe.getId() != null && servicoDetalhe.getId() > 0) {
+                JOptionPane.showMessageDialog(this, "Produto do serviço salvo com sucesso!", "Produto do serviço", JOptionPane.INFORMATION_MESSAGE);
+
+                produtoValor = new ProdutoValor();
+                preencheServico();
+                preencheProduto();
+            }
+        }
+    }//GEN-LAST:event_btnLancarProdutoActionPerformed
+
+    private void btnExcluirProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirProdutoActionPerformed
+        int[] rows = tblServicoDetalhe.getSelectedRows();
+
+        if (rows.length > 0) {
+            if (JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja realmente excluir estes produtos do serviço?",
+                    "Produtos do serviço",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+
+                ServicoDetalhe servicoDetalhe;
+
+                try {
+                    for (int i = 0; i < rows.length; i++) {
+                        servicoDetalhe = servicoDetalheDao.consultarId(ServicoDetalhe.class, Long.parseLong(tblServicoDetalhe.getValueAt(rows[i], 0).toString()));
+                        servicoDetalheDao.deletar(servicoDetalhe);
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Produtos do serviço excluidos com sucesso!", "Produto do serviço", JOptionPane.INFORMATION_MESSAGE);
+
+                    preencheServico();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione o produto do serviço para continuar!", "Produto do serviço", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnExcluirProdutoActionPerformed
+
+    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnFecharActionPerformed
+
+    private void txtValorPagamentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorPagamentoKeyReleased
+        String caracteres = "1234567890.";
+
+        if (!caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtValorPagamentoKeyReleased
+
+    private void btnLancarPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLancarPagamentoActionPerformed
+        if (txtValorPagamento.getText().isEmpty() || Double.parseDouble(txtValorPagamento.getText()) == 0) {
+            JOptionPane.showMessageDialog(this, "Informe um valor de pagamento válido para continuar!", "Pagamento do serviço", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        FormaPagamento formaPagamento = formaPagamentoList.get(comboFormaPagamento.getSelectedIndex());
+        double restantePagar = servico.getRestantePagar();
+        double valorPagamento = Double.parseDouble(txtValorPagamento.getText());
+        double saldoCliente = servico.getIdcliente().getSaldoAtual();
+
+        //Verificando crédito do cliente
+        if (formaPagamento.getTipo().equals("creditoSaida")) {
+            if (restantePagar == 0) {
+                JOptionPane.showMessageDialog(this, "Você não pode utilizar créditos para pagar um serviço já totalmente pago!", "Pagamento do serviço", JOptionPane.WARNING_MESSAGE);
+                return;
+            } else if (valorPagamento > restantePagar) {
+                JOptionPane.showMessageDialog(this, "Ao utilizar crédito, o 'restante a pagar' delimita o valor máximo de crédito que pode ser utilizado "
+                        + "\n"
+                        + "\n Crédito utilizado: R$ " + utilidade.decimalFormat(valorPagamento) + " / Restante a pagar: R$ " + utilidade.decimalFormat(restantePagar) + ""
+                        + "\n"
+                        + "\n Efetue o pagamento utilizando crédito até o valor máximo de R$ " + utilidade.decimalFormat(restantePagar) + " para continuar!", "Pagamento do serviço", JOptionPane.WARNING_MESSAGE);
+                return;
+            } else if (valorPagamento > saldoCliente) {
+                JOptionPane.showMessageDialog(this, "Este cliente não possui crédito suficiente para realizar o pagamento!", "Pagamento do serviço", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+
+        //Gerando pagamento do serviço
+        if (servicoPagamentoDao.salvarNovoServicoPagamento(
+                servico,
+                formaPagamento,
+                utilidade.asLocalDateTime(comboDataPagamento.getDate()),
+                valorPagamento,
+                restantePagar)) {
+            JOptionPane.showMessageDialog(this, "Pagamento do serviço salvo com sucesso!", "Pagamento do serviço", JOptionPane.INFORMATION_MESSAGE);
+
+            txtValorPagamento.setText("");
+            preencheServico();
+        } else {
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro na geraçao do pagamento!", "Pagamento do serviço", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnLancarPagamentoActionPerformed
+
+    private void btnExcluirPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirPagamentoActionPerformed
+        int[] rows = tblPagamentos.getSelectedRows();
+
+        if (rows.length > 0) {
+            if (JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja realmente excluir pagamentos do serviço?",
+                    "Pagamento do serviço",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+
+                ServicoPagamento servicoPagamento;
+
+                try {
+                    for (int i = 0; i < rows.length; i++) {
+                        servicoPagamento = servicoPagamentoDao.consultarId(ServicoPagamento.class, Long.parseLong(tblPagamentos.getValueAt(rows[i], 0).toString()));
+                        servicoPagamentoDao.deletar(servicoPagamento);
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Pagamentos do serviço excluidos com sucesso!", "Pagamento do serviço", JOptionPane.INFORMATION_MESSAGE);
+
+                    txtValorPagamento.setText("");
+                    preencheServico();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }//GEN-LAST:event_btnExcluirPagamentoActionPerformed
+
+    private void btnFinalizarServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarServicoActionPerformed
+        if (servico.getId() != null && servico.getId() > 0 && servico.getDataFinalizacao() == null && servico.getRestantePagar() <= 0) {
+
+            servico = servicoDao.finalizarServico(servico);
+            
+            if (servico.getDataFinalizacao() != null) {
+                JOptionPane.showMessageDialog(this, "Serviço finalizado com sucesso!", "Serviço", JOptionPane.INFORMATION_MESSAGE);
+
+                preencheServico();
+            }
+        }
+    }//GEN-LAST:event_btnFinalizarServicoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -477,13 +1004,19 @@ public class FrmServico extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnExcluirPagamento;
+    private javax.swing.JButton btnExcluirProduto;
+    private javax.swing.JButton btnFechar;
+    private javax.swing.JButton btnFinalizarServico;
+    private javax.swing.JButton btnLancarPagamento;
+    private javax.swing.JButton btnLancarProduto;
     private javax.swing.JButton btnPesquisarCliente;
     private javax.swing.JButton btnPesquisarProduto;
     private javax.swing.JButton btnSalvarServico;
     private com.toedter.calendar.JDateChooser comboDataCriacao;
     private com.toedter.calendar.JDateChooser comboDataLancamento;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private com.toedter.calendar.JDateChooser comboDataPagamento;
+    private javax.swing.JComboBox<String> comboFormaPagamento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -492,12 +1025,15 @@ public class FrmServico extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -511,13 +1047,24 @@ public class FrmServico extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JLabel lblCreditoCliente;
+    private javax.swing.JLabel lblRestantePagar;
+    private javax.swing.JLabel lblRestantePagarGeral;
+    private javax.swing.JLabel lblValorCreditoCliente;
     private javax.swing.JLabel lblValorTotal;
+    private javax.swing.JLabel lblValorTotalPago;
+    private javax.swing.JLabel lblValorTotalPagoGeral;
+    private javax.swing.JLabel lblValorTotalServico;
+    private javax.swing.JLabel lblValorTotalServicoGeral;
     private javax.swing.JLabel lblValorUnitario;
     private javax.swing.JTabbedPane tabbedPaneServico;
+    private javax.swing.JTable tblPagamentos;
+    private javax.swing.JTable tblServicoDetalhe;
     private javax.swing.JTextField txtCodigoGrupo;
     private javax.swing.JTextField txtCodigoProduto;
     private javax.swing.JTextArea txtDescricao;
@@ -525,5 +1072,6 @@ public class FrmServico extends javax.swing.JFrame {
     private javax.swing.JTextField txtNomeProduto;
     private javax.swing.JTextField txtQuantidadeProduto;
     private javax.swing.JTextField txtTitulo;
+    private javax.swing.JTextField txtValorPagamento;
     // End of variables declaration//GEN-END:variables
 }

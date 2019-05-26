@@ -2,6 +2,7 @@ package protese.model.servico;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -19,8 +20,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import protese.dao.servico.ServicoDetalheDao;
+import protese.dao.servico.ServicoPagamentoDao;
 import protese.jpa.interfaces.Entidade;
 import protese.model.cliente.Cliente;
+import protese.model.cliente.ClienteCreditoEntrada;
 
 /**
  *
@@ -32,7 +36,7 @@ import protese.model.cliente.Cliente;
 @NamedQueries({
     @NamedQuery(name = "Servico.findAll", query = "SELECT s FROM Servico s")})
 public class Servico implements Serializable, Entidade {
-
+   
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +59,10 @@ public class Servico implements Serializable, Entidade {
     @JoinColumn(name = "idcliente", referencedColumnName = "idcliente")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Cliente idcliente;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idservico", fetch = FetchType.LAZY)
+    private List<ServicoDetalhe> servicoDetalheList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idservico", fetch = FetchType.LAZY)
+    private List<ClienteCreditoEntrada> clienteCreditoEntradaList;
 
     public Servico() {
     }
@@ -123,6 +131,14 @@ public class Servico implements Serializable, Entidade {
 
     @XmlTransient
     public List<ServicoPagamento> getServicoPagamentoList() {
+        ServicoPagamentoDao servicoPagamentoDao = ServicoPagamentoDao.getInstance();
+
+        servicoPagamentoList = new ArrayList();
+
+        if (this.idservico != null && this.idservico > 0) {
+            servicoPagamentoList = servicoPagamentoDao.retornaTodosPorServico(this);
+        }
+
         return servicoPagamentoList;
     }
 
@@ -136,6 +152,58 @@ public class Servico implements Serializable, Entidade {
 
     public void setIdcliente(Cliente idcliente) {
         this.idcliente = idcliente;
+    }
+
+    @XmlTransient
+    public List<ServicoDetalhe> getServicoDetalheList() {
+        ServicoDetalheDao servicoDetalheDao = ServicoDetalheDao.getInstance();
+
+        servicoDetalheList = new ArrayList();
+
+        if (this.idservico != null && this.idservico > 0) {
+            servicoDetalheList = servicoDetalheDao.retornaTodosPorServico(this);
+        }
+
+        return servicoDetalheList;
+    }
+
+    public void setServicoDetalheList(List<ServicoDetalhe> servicoDetalheList) {
+        this.servicoDetalheList = servicoDetalheList;
+    }
+
+    public double getValorTotalServico() {
+        double valorTotal = 0;
+
+        for (ServicoDetalhe detalhe : getServicoDetalheList()) {
+            valorTotal += detalhe.getValorTotal();
+        }
+
+        return valorTotal;
+    }
+
+    public double getValorTotalPago() {
+        double valorTotal = 0;
+
+        for (ServicoPagamento pagamento : getServicoPagamentoList()) {
+            valorTotal += pagamento.getIdpagamento().getValor();
+        }
+
+        return valorTotal;
+    }
+
+    public double getRestantePagar() {
+        double restantePagar = getValorTotalServico() - getValorTotalPago();
+
+        return restantePagar < 0 ? 0 : restantePagar;
+    }
+
+    @XmlTransient
+    public List<ClienteCreditoEntrada> getClienteCreditoEntradaList() {
+        return clienteCreditoEntradaList;
+    }
+
+    public void setClienteCreditoEntradaList(List<ClienteCreditoEntrada> clienteCreditoEntradaList) {
+        this.clienteCreditoEntradaList = clienteCreditoEntradaList;
     }
 
 }

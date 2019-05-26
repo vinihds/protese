@@ -19,7 +19,10 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import protese.dao.cliente.ClienteContatoDao;
+import protese.dao.cliente.ClienteCreditoEntradaDao;
+import protese.dao.cliente.ClienteCreditoSaidaDao;
 import protese.dao.cliente.ClienteEnderecoDao;
+import protese.dao.servico.ServicoDao;
 import protese.jpa.interfaces.Entidade;
 
 /**
@@ -120,6 +123,14 @@ public class Cliente implements Serializable, Entidade {
 
     @XmlTransient
     public List<ClienteCreditoEntrada> getClienteCreditoEntradaList() {
+        ClienteCreditoEntradaDao creditoEntradaDao = ClienteCreditoEntradaDao.getInstance();
+
+        clienteCreditoEntradaList = new ArrayList();
+
+        if (idcliente != null && idcliente > 0) {
+            clienteCreditoEntradaList = creditoEntradaDao.retornaTodosPorCliente(this);
+        }
+
         return clienteCreditoEntradaList;
     }
 
@@ -136,7 +147,7 @@ public class Cliente implements Serializable, Entidade {
         if (idcliente != null && idcliente > 0) {
             clienteEnderecoList = clienteEnderecoDao.retornaTodosPorCliente(this);
         }
-        
+
         return clienteEnderecoList;
     }
 
@@ -163,6 +174,14 @@ public class Cliente implements Serializable, Entidade {
 
     @XmlTransient
     public List<ClienteCreditoSaida> getClienteCreditoSaidaList() {
+        ClienteCreditoSaidaDao creditoSaidaDao = ClienteCreditoSaidaDao.getInstance();
+
+        clienteCreditoSaidaList = new ArrayList();
+
+        if (idcliente != null && idcliente > 0) {
+            clienteCreditoSaidaList = creditoSaidaDao.retornaTodosPorCliente(this);
+        }
+
         return clienteCreditoSaidaList;
     }
 
@@ -172,6 +191,14 @@ public class Cliente implements Serializable, Entidade {
 
     @XmlTransient
     public List<Servico> getServicoList() {
+        ServicoDao servicoDao = ServicoDao.getInstance();
+
+        servicoList = new ArrayList();
+
+        if (idcliente != null && idcliente > 0) {
+            servicoList = servicoDao.retornaTodosPorCliente(this);
+        }
+
         return servicoList;
     }
 
@@ -185,6 +212,21 @@ public class Cliente implements Serializable, Entidade {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public double getSaldoAtual() {
+        double totalEntrada = 0;
+        double totalSaida = 0;
+
+        for (ClienteCreditoEntrada entrada : getClienteCreditoEntradaList()) {
+            totalEntrada += entrada.getValorCredito();
+        }
+
+        for (ClienteCreditoSaida saida : getClienteCreditoSaidaList()) {
+            totalSaida += saida.getIdservicoPagamento().getIdpagamento().getValor();
+        }
+
+        return totalEntrada - totalSaida;
     }
 
 }

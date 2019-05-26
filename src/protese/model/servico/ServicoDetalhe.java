@@ -1,20 +1,22 @@
 package protese.model.servico;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import protese.jpa.interfaces.Entidade;
+import protese.model.produto.ProdutoValor;
 
 /**
  *
@@ -33,13 +35,12 @@ public class ServicoDetalhe implements Serializable, Entidade {
     @Basic(optional = false)
     @Column(name = "idservico_detalhe")
     private Long idservicoDetalhe;
-    @Basic(optional = false)
-    @Column(name = "idservico")
-    private short idservico;
-    @Basic(optional = false)
-    @Column(name = "idproduto_valor")
-    private short idprodutoValor;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @JoinColumn(name = "idproduto_valor", referencedColumnName = "idproduto_valor")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private ProdutoValor idprodutoValor;
+    @JoinColumn(name = "idservico", referencedColumnName = "idservico")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Servico idservico;
     @Column(name = "quantidade")
     private Double quantidade;
     @Column(name = "valor_unitario")
@@ -47,8 +48,7 @@ public class ServicoDetalhe implements Serializable, Entidade {
     @Column(name = "valor_total")
     private Double valorTotal;
     @Column(name = "data_lancamento")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataLancamento;
+    private LocalDateTime dataLancamento;
     @Column(name = "descricao")
     private String descricao;
     @Basic(optional = false)
@@ -62,10 +62,8 @@ public class ServicoDetalhe implements Serializable, Entidade {
         this.idservicoDetalhe = idservicoDetalhe;
     }
 
-    public ServicoDetalhe(Long idservicoDetalhe, short idservico, short idprodutoValor, boolean excluido) {
+    public ServicoDetalhe(Long idservicoDetalhe, boolean excluido) {
         this.idservicoDetalhe = idservicoDetalhe;
-        this.idservico = idservico;
-        this.idprodutoValor = idprodutoValor;
         this.excluido = excluido;
     }
 
@@ -80,22 +78,6 @@ public class ServicoDetalhe implements Serializable, Entidade {
 
     public void setIdservicoDetalhe(Long idservicoDetalhe) {
         this.idservicoDetalhe = idservicoDetalhe;
-    }
-
-    public short getIdservico() {
-        return idservico;
-    }
-
-    public void setIdservico(short idservico) {
-        this.idservico = idservico;
-    }
-
-    public short getIdprodutoValor() {
-        return idprodutoValor;
-    }
-
-    public void setIdprodutoValor(short idprodutoValor) {
-        this.idprodutoValor = idprodutoValor;
     }
 
     public Double getQuantidade() {
@@ -122,11 +104,11 @@ public class ServicoDetalhe implements Serializable, Entidade {
         this.valorTotal = valorTotal;
     }
 
-    public Date getDataLancamento() {
+    public LocalDateTime getDataLancamento() {
         return dataLancamento;
     }
 
-    public void setDataLancamento(Date dataLancamento) {
+    public void setDataLancamento(LocalDateTime dataLancamento) {
         this.dataLancamento = dataLancamento;
     }
 
@@ -144,6 +126,22 @@ public class ServicoDetalhe implements Serializable, Entidade {
 
     public void setExcluido(boolean excluido) {
         this.excluido = excluido;
+    }
+
+    public ProdutoValor getIdprodutoValor() {
+        return idprodutoValor;
+    }
+
+    public void setIdprodutoValor(ProdutoValor idprodutoValor) {
+        this.idprodutoValor = idprodutoValor;
+    }
+
+    public Servico getIdservico() {
+        return idservico;
+    }
+
+    public void setIdservico(Servico idservico) {
+        this.idservico = idservico;
     }
 
 }

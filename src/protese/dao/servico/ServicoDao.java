@@ -1,9 +1,12 @@
 package protese.dao.servico;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
+import protese.dao.cliente.ClienteCreditoEntradaDao;
 import protese.jpa.interfaces.Dao;
+import protese.model.cliente.Cliente;
 import protese.model.servico.Servico;
 
 /**
@@ -13,6 +16,8 @@ import protese.model.servico.Servico;
 public class ServicoDao extends Dao<Servico> {
 
     private static ServicoDao unique = null;
+
+    private ClienteCreditoEntradaDao creditoEntradaDao = ClienteCreditoEntradaDao.getInstance();
 
     private ServicoDao() {
     }
@@ -51,5 +56,39 @@ public class ServicoDao extends Dao<Servico> {
         resultset = query.getResultList();
 
         return resultset;
+    }
+
+    public List<Servico> retornaTodosPorCliente(Cliente cliente) {
+        List<Servico> resultset = new ArrayList();
+
+        Query query = createQuery("SELECT servico FROM Servico AS servico "
+                + " INNER JOIN servico.idcliente AS cliente "
+                + " WHERE servico.excluido = false "
+                + " AND servico.idcliente = :cliente "
+                + " ORDER BY servico.dataCriacao DESC");
+        query.setParameter("cliente", cliente);
+
+        resultset = query.getResultList();
+
+        return resultset;
+    }
+
+    public Servico finalizarServico(Servico servico) {
+        double valorCredito = servico.getValorTotalServico() - servico.getValorTotalPago();
+
+        if (valorCredito < 0) {
+            //Tornando o crédito positivo
+            valorCredito = valorCredito * -1;
+        }
+
+        if (valorCredito > 0) {
+            //Deve adicionar crédito
+            creditoEntradaDao.salvarClienteCreditoEntrada(servico.getIdcliente(), servico, valorCredito);
+        }
+
+        servico.setDataFinalizacao(LocalDateTime.now());
+        servico = salvar(servico);
+
+        return servico;
     }
 }
