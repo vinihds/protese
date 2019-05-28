@@ -1,5 +1,6 @@
 package protese.dao.cliente;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
@@ -67,5 +68,24 @@ public class ClienteCreditoEntradaDao extends Dao<ClienteCreditoEntrada> {
         creditoEntrada.setValorCredito(valorCredito);
         
         return salvar(creditoEntrada);
+    }
+
+    public List<ClienteCreditoEntrada> retornaTodosPorCliente(Cliente cliente, LocalDateTime dataInicial, LocalDateTime dataFinal) {
+        List<ClienteCreditoEntrada> resultset = new ArrayList();
+
+        Query query = createQuery("SELECT creditoEntrada FROM ClienteCreditoEntrada AS creditoEntrada "
+                + " INNER JOIN creditoEntrada.idcliente AS cliente "
+                + " INNER JOIN creditoEntrada.idservico AS servico "
+                + " WHERE creditoEntrada.excluido = false "
+                + " AND servico.excluido = false "
+                + " AND servico.dataFinalizacao BETWEEN :dataInicial AND :dataFinal "
+                + " AND creditoEntrada.idcliente = :cliente");
+        query.setParameter("cliente", cliente);
+        query.setParameter("dataInicial", dataInicial);
+        query.setParameter("dataFinal", dataFinal);
+
+        resultset = query.getResultList();
+
+        return resultset;
     }
 }

@@ -49,7 +49,9 @@ public class ServicoDetalheDao extends Dao<ServicoDetalhe> {
                 + " INNER JOIN servicoDetalhe.idservico AS servico "
                 + " WHERE servico.excluido = false "
                 + " AND servicoDetalhe.excluido = false "
+                + " AND servicoDetalhe.idservico = :servico "
                 + " ORDER BY servicoDetalhe.dataLancamento");
+        query.setParameter("servico", servico);
 
         resultset = query.getResultList();
 

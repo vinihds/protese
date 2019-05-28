@@ -1,6 +1,5 @@
 package protese.view.servico;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +12,6 @@ import protese.dao.servico.ServicoDetalheDao;
 import protese.dao.servico.ServicoPagamentoDao;
 import protese.model.cliente.Cliente;
 import protese.model.pagamento.FormaPagamento;
-import protese.model.pagamento.Pagamento;
 import protese.model.produto.ProdutoValor;
 import protese.model.servico.Servico;
 import protese.model.servico.ServicoDetalhe;
@@ -958,12 +956,20 @@ public class FrmServico extends javax.swing.JFrame {
     private void btnFinalizarServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarServicoActionPerformed
         if (servico.getId() != null && servico.getId() > 0 && servico.getDataFinalizacao() == null && servico.getRestantePagar() <= 0) {
 
-            servico = servicoDao.finalizarServico(servico);
-            
-            if (servico.getDataFinalizacao() != null) {
-                JOptionPane.showMessageDialog(this, "Serviço finalizado com sucesso!", "Serviço", JOptionPane.INFORMATION_MESSAGE);
+            if (JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja realmente excluir estes produtos do serviço?",
+                    "Produtos do serviço",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 
-                preencheServico();
+                servico = servicoDao.finalizarServico(servico);
+
+                if (servico.getDataFinalizacao() != null) {
+                    JOptionPane.showMessageDialog(this, "Serviço finalizado com sucesso!", "Serviço", JOptionPane.INFORMATION_MESSAGE);
+
+                    preencheServico();
+                }
             }
         }
     }//GEN-LAST:event_btnFinalizarServicoActionPerformed

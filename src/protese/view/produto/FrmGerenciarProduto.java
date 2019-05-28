@@ -120,7 +120,7 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         btnNovo.setBounds(10, 560, 140, 40);
 
         btnAlterar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnAlterar.setText("Alterar");
+        btnAlterar.setText("Dados");
         btnAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAlterarActionPerformed(evt);

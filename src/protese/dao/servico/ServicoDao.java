@@ -72,6 +72,37 @@ public class ServicoDao extends Dao<Servico> {
 
         return resultset;
     }
+    
+    public List<Servico> retornaTodosPorClienteNome(String pesquisa) {
+        List<Servico> resultset = new ArrayList();
+
+        Query query = createQuery("SELECT servico FROM Servico AS servico "
+                + " INNER JOIN servico.idcliente AS cliente "
+                + " WHERE servico.excluido = false "
+                + " AND (cliente.nome LIKE :pesquisa "
+                + "     OR cliente.documento LIKE :pesquisa) "
+                + " ORDER BY servico.dataCriacao DESC");
+        query.setParameter("pesquisa", "%" + pesquisa + "%");
+
+        resultset = query.getResultList();
+
+        return resultset;
+    }
+    
+    public List<Servico> retornaTodosPorTitulo(String pesquisa) {
+        List<Servico> resultset = new ArrayList();
+
+        Query query = createQuery("SELECT servico FROM Servico AS servico "
+                + " WHERE servico.excluido = false "
+                + " AND (servico.titulo LIKE :pesquisa "
+                + "     OR servico.descricao LIKE :pesquisa) "
+                + " ORDER BY servico.dataCriacao DESC");
+        query.setParameter("pesquisa", "%" + pesquisa + "%");
+
+        resultset = query.getResultList();
+
+        return resultset;
+    }
 
     public Servico finalizarServico(Servico servico) {
         double valorCredito = servico.getValorTotalServico() - servico.getValorTotalPago();
@@ -90,5 +121,37 @@ public class ServicoDao extends Dao<Servico> {
         servico = salvar(servico);
 
         return servico;
+    }
+
+    public List<Servico> retornaTodosFinalizados(String pesquisa) {
+        List<Servico> resultset = new ArrayList();
+
+        Query query = createQuery("SELECT servico FROM Servico AS servico "
+                + " WHERE servico.excluido = false "
+                + " AND (servico.titulo LIKE :pesquisa "
+                + "     OR servico.descricao LIKE :pesquisa) "
+                + " AND servico.dataFinalizacao IS NOT NULL "
+                + " ORDER BY servico.dataCriacao DESC");
+        query.setParameter("pesquisa", "%" + pesquisa + "%");
+
+        resultset = query.getResultList();
+
+        return resultset;
+    }
+
+    public List<Servico> retornaTodosNaoFinalizados(String pesquisa) {
+        List<Servico> resultset = new ArrayList();
+
+        Query query = createQuery("SELECT servico FROM Servico AS servico "
+                + " WHERE servico.excluido = false "
+                + " AND (servico.titulo LIKE :pesquisa "
+                + "     OR servico.descricao LIKE :pesquisa) "
+                + " AND servico.dataFinalizacao IS NULL "
+                + " ORDER BY servico.dataCriacao DESC");
+        query.setParameter("pesquisa", "%" + pesquisa + "%");
+
+        resultset = query.getResultList();
+
+        return resultset;
     }
 }

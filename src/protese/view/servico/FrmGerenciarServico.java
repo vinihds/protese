@@ -107,7 +107,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         btnNovo.setBounds(10, 590, 140, 40);
 
         btnAlterar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnAlterar.setText("Alterar");
+        btnAlterar.setText("Dados");
         btnAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAlterarActionPerformed(evt);
@@ -137,7 +137,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         btnFechar.setBounds(810, 590, 140, 40);
 
         comboPesquisa.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        comboPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Cliente", "Titulo/Descrição" }));
+        comboPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Cliente", "Titulo/Descrição", "Já finalizados", "Não finalizados" }));
         jPanel1.add(comboPesquisa);
         comboPesquisa.setBounds(10, 30, 210, 40);
 
@@ -234,8 +234,22 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         switch (comboPesquisa.getSelectedIndex()) {
             case 0:
                 preencherTabela(servicoDao.retornaTodos());
+                break;
+            case 1:
+                preencherTabela(servicoDao.retornaTodosPorClienteNome(txtPesquisa.getText()));
+                break;
+            case 2:
+                preencherTabela(servicoDao.retornaTodosPorTitulo(txtPesquisa.getText()));
+                break;
+            case 3:
+                preencherTabela(servicoDao.retornaTodosFinalizados(txtPesquisa.getText()));
+                break;
+            case 4: 
+                preencherTabela(servicoDao.retornaTodosNaoFinalizados(txtPesquisa.getText()));
+                break;
             default:
                 preencherTabela(servicoDao.retornaTodos());
+                break;
         }
     }//GEN-LAST:event_btnPesquisarActionPerformed
 

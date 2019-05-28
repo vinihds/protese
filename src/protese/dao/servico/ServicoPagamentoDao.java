@@ -104,7 +104,9 @@ public class ServicoPagamentoDao extends Dao<ServicoPagamento> {
                 + " WHERE servico.excluido = false "
                 + " AND servicoPagamento.excluido = false "
                 + " AND pagamento.excluido = false "
+                + " AND servicoPagamento.idservico = :servico"
                 + " ORDER BY pagamento.dataLancamento");
+        query.setParameter("servico", servico);
 
         resultset = query.getResultList();
 
