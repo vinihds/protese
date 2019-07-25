@@ -44,8 +44,9 @@ public class ClienteDao extends Dao<Cliente> {
     public List<Cliente> retornaTodos() {
         List<Cliente> resultset = new ArrayList();
 
-        Query query = createQuery("SELECT cli FROM Cliente AS cli "
-                + " WHERE cli.excluido = false");
+        Query query = createQuery("SELECT cliente FROM Cliente AS cliente "
+                + " WHERE cliente.excluido = false "
+                + " ORDER BY cliente.nome");
 
         resultset = query.getResultList();
 
@@ -57,8 +58,22 @@ public class ClienteDao extends Dao<Cliente> {
 
         Query query = createQuery("SELECT cliente FROM Cliente AS cliente "
                 + " WHERE cliente.excluido = false "
-                + " AND (cliente.nome LIKE :pesquisa "
-                + "     OR cliente.documento LIKE :pesquisa)"
+                + " AND cliente.nome LIKE LOWER(:pesquisa) "
+                + " ORDER BY cliente.nome");
+        query.setParameter("pesquisa", "%" + pesquisa + "%");
+
+        resultset = query.getResultList();
+
+        return resultset;
+    }
+
+    public List<Cliente> retornaTodosPorNomeOuCodigoProprio(String pesquisa) {
+        List<Cliente> resultset = new ArrayList();
+
+        Query query = createQuery("SELECT cliente FROM Cliente AS cliente "
+                + " WHERE cliente.excluido = false "
+                + " AND (LOWER(cliente.nome) LIKE LOWER(:pesquisa) "
+                + "     OR LOWER(cliente.codigoProprio) LIKE LOWER(:pesquisa)) "
                 + " ORDER BY cliente.nome");
         query.setParameter("pesquisa", "%" + pesquisa + "%");
 

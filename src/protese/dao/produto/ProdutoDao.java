@@ -58,7 +58,7 @@ public class ProdutoDao extends Dao<Produto> {
 
         Query query = createQuery("SELECT produto FROM Produto AS produto "
                 + " WHERE produto.excluido = false "
-                + " AND produto.nome LIKE :nome "
+                + " AND LOWER(produto.nome) LIKE LOWER(:nome) "
                 + " ORDER BY produto.nome");
         query.setParameter("nome", "%" + nome + "%");
 
@@ -72,7 +72,7 @@ public class ProdutoDao extends Dao<Produto> {
 
         Query query = createQuery("SELECT produto FROM Produto AS produto "
                 + " WHERE produto.excluido = false "
-                + " AND produto.codigo LIKE :codigoProprio "
+                + " AND LOWER(produto.codigo) LIKE LOWER(:codigoProprio) "
                 + " ORDER BY produto.nome");
         query.setParameter("codigoProprio", "%" + codigoProprio + "%");
 
@@ -90,10 +90,34 @@ public class ProdutoDao extends Dao<Produto> {
                 + " WHERE produto.excluido = false "
                 + " AND produtoValor.excluido = false "
                 + " AND grupo.excluido = false "
-                + " AND (idgrupo.codigo LIKE :codigoProprio "
-                + "     OR idgrupo.nome LIKE :codigoProprio) "
+                + " AND (LOWER(grupo.codigo) LIKE LOWER(:codigoProprio) "
+                + "     OR LOWER(grupo.nome) LIKE LOWER(:codigoProprio)) "
                 + " ORDER BY produto.nome");
         query.setParameter("codigoProprio", "%" + codigoNomeGrupo + "%");
+
+        resultset = query.getResultList();
+
+        return resultset;
+    }
+
+    public List<Produto> retornaTodosPorNomeOuCodigoProprioOuGrupo(String pesquisa) {
+        List<Produto> resultset = new ArrayList();
+
+        Query query = createQuery("SELECT produto FROM Produto AS produto "
+                + " WHERE produto.excluido = false "
+                + " AND (LOWER(produto.nome) LIKE LOWER(:pesquisa) "
+                + "     OR LOWER(produto.codigo) LIKE LOWER(:pesquisa) "
+                + "     OR (SELECT COUNT(produtoValor) FROM ProdutoValor AS produtoValor "
+                + "         INNER JOIN produtoValor.idproduto AS produtoTemp "
+                + "         INNER JOIN produtoValor.idgrupo AS grupo "
+                + "         WHERE produtoTemp.excluido = false "
+                + "         AND produtoValor.excluido = false "
+                + "         AND grupo.excluido = false "
+                + "         AND (LOWER(grupo.codigo) LIKE LOWER(:pesquisa) "
+                + "             OR LOWER(grupo.nome) LIKE LOWER(:pesquisa)) "
+                + "     ) > 0) "
+                + " ORDER BY produto.nome");
+        query.setParameter("pesquisa", "%" + pesquisa + "%");
 
         resultset = query.getResultList();
 

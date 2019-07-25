@@ -1,5 +1,6 @@
 package protese.view.produto;
 
+import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +18,8 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
 
     public FrmGerenciarProduto() {
         initComponents();
-        
+
+        tblProdutos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
         preencheProdutos(produtoDao.retornaTodos());
     }
 
@@ -35,8 +37,6 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        comboPesquisa = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         txtPesquisa = new javax.swing.JTextField();
         btnPesquisar = new javax.swing.JButton();
@@ -53,24 +53,19 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Pesquisar por");
-        jPanel1.add(jLabel1);
-        jLabel1.setBounds(10, 10, 130, 20);
-
-        comboPesquisa.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        comboPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Nome", "Código próprio", "Grupo" }));
-        jPanel1.add(comboPesquisa);
-        comboPesquisa.setBounds(10, 30, 200, 40);
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("Pesquisa");
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setText("Pesquisar por nome, código próprio ou grupo");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(220, 10, 80, 20);
+        jLabel2.setBounds(10, 10, 580, 20);
 
-        txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPesquisaKeyReleased(evt);
+            }
+        });
         jPanel1.add(txtPesquisa);
-        txtPesquisa.setBounds(220, 30, 580, 40);
+        txtPesquisa.setBounds(10, 30, 790, 40);
 
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
@@ -81,6 +76,7 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         jPanel1.add(btnPesquisar);
         btnPesquisar.setBounds(810, 10, 60, 60);
 
+        tblProdutos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -109,7 +105,7 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1);
         jScrollPane1.setBounds(10, 80, 860, 470);
 
-        btnNovo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnNovo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnNovo.setText("Novo");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -119,7 +115,7 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         jPanel1.add(btnNovo);
         btnNovo.setBounds(10, 560, 140, 40);
 
-        btnAlterar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnAlterar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnAlterar.setText("Dados");
         btnAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,7 +125,7 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         jPanel1.add(btnAlterar);
         btnAlterar.setBounds(160, 560, 140, 40);
 
-        btnExcluir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExcluir.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnExcluir.setText("Excluir");
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,7 +135,7 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
         jPanel1.add(btnExcluir);
         btnExcluir.setBounds(310, 560, 140, 40);
 
-        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnFechar.setText("Fechar");
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,9 +160,11 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        FrmProduto frm = new FrmProduto(new Produto());
+        FrmProduto frm = new FrmProduto(this, true, new Produto());
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
+
+        btnPesquisarActionPerformed(null);
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
@@ -176,9 +174,11 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
             try {
                 Produto produto = produtoDao.consultarId(Produto.class, Long.parseLong(modelo.getValueAt(rows[0], 0).toString()));
 
-                FrmProduto frm = new FrmProduto(produto);
+                FrmProduto frm = new FrmProduto(this, true, produto);
                 frm.setLocationRelativeTo(null);
                 frm.setVisible(true);
+                
+                btnPesquisarActionPerformed(null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -218,29 +218,18 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        switch (comboPesquisa.getSelectedIndex()) {
-            case 0:
-                preencheProdutos(produtoDao.retornaTodos());
+        try {
+            preencheProdutos(produtoDao.retornaTodosPorNomeOuCodigoProprioOuGrupo(txtPesquisa.getText()));
+        } catch (Exception e) {
+            e.printStackTrace();
 
-                break;
-            case 1:
-                preencheProdutos(produtoDao.retornaTodosPorNome(txtPesquisa.getText()));
-
-                break;
-            case 2:
-                preencheProdutos(produtoDao.retornaTodosPorCodigoProprio(txtPesquisa.getText()));
-
-                break;
-            case 3:
-                preencheProdutos(produtoDao.retornaTodosPorGrupo(txtPesquisa.getText()));
-
-                break;
-            default:
-                preencheProdutos(produtoDao.retornaTodos());
-
-                break;
+            preencheProdutos(produtoDao.retornaTodos());
         }
     }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void txtPesquisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisaKeyReleased
+        btnPesquisarActionPerformed(null);
+    }//GEN-LAST:event_txtPesquisaKeyReleased
 
     /**
      * @param args the command line arguments
@@ -286,8 +275,6 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnPesquisar;
-    private javax.swing.JComboBox<String> comboPesquisa;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

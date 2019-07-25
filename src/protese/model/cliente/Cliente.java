@@ -50,6 +50,8 @@ public class Cliente implements Serializable, Entidade {
     private String documento;
     @Column(name = "email")
     private String email;
+    @Column(name = "codigo_proprio")
+    private String codigoProprio;
     @Basic(optional = false)
     @Column(name = "excluido")
     private boolean excluido;
@@ -212,6 +214,14 @@ public class Cliente implements Serializable, Entidade {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getCodigoProprio() {
+        return codigoProprio;
+    }
+
+    public void setCodigoProprio(String codigoProprio) {
+        this.codigoProprio = codigoProprio;
     }
 
     public double getSaldoAtual() {

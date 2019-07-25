@@ -1,5 +1,6 @@
 package protese.view.produto;
 
+import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -18,6 +19,7 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
     public FrmGerenciarGrupo() {
         initComponents();
 
+        tblGrupo.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
         preencherTabela(grupoDao.retornaTodos());
     }
 
@@ -35,7 +37,6 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         txtPesquisa = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblGrupo = new javax.swing.JTable();
@@ -43,6 +44,7 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
         btnExcluir = new javax.swing.JButton();
         btnFechar = new javax.swing.JButton();
         btnPesquisar = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gerenciar grupos");
@@ -50,15 +52,16 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Pesquisa");
-        jPanel1.add(jLabel1);
-        jLabel1.setBounds(10, 10, 190, 20);
-
-        txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPesquisaKeyReleased(evt);
+            }
+        });
         jPanel1.add(txtPesquisa);
         txtPesquisa.setBounds(10, 30, 500, 40);
 
+        tblGrupo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblGrupo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -75,7 +78,7 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblGrupo.setRowHeight(30);
+        tblGrupo.setRowHeight(35);
         tblGrupo.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblGrupo);
         if (tblGrupo.getColumnModel().getColumnCount() > 0) {
@@ -89,7 +92,7 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1);
         jScrollPane1.setBounds(10, 80, 570, 280);
 
-        btnNovo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnNovo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnNovo.setText("Novo");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,7 +102,7 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
         jPanel1.add(btnNovo);
         btnNovo.setBounds(10, 370, 140, 40);
 
-        btnExcluir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExcluir.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnExcluir.setText("Excluir");
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,7 +112,7 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
         jPanel1.add(btnExcluir);
         btnExcluir.setBounds(160, 370, 140, 40);
 
-        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnFechar.setText("Fechar");
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,6 +130,11 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
         });
         jPanel1.add(btnPesquisar);
         btnPesquisar.setBounds(520, 10, 60, 60);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setText("Pesquisar por nome ou código próprio");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(10, 10, 450, 20);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -175,14 +183,26 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        FrmGrupo frm = new FrmGrupo();
+        FrmGrupo frm = new FrmGrupo(this, true);
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
+
+        btnPesquisarActionPerformed(null);
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        preencherTabela(grupoDao.retornaTodosPesquisa(txtPesquisa.getText()));
+        try {
+            preencherTabela(grupoDao.retornaTodosPorNomeOuCodigoProprio(txtPesquisa.getText()));
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            preencherTabela(grupoDao.retornaTodos());
+        }
     }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void txtPesquisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisaKeyReleased
+        btnPesquisarActionPerformed(null);
+    }//GEN-LAST:event_txtPesquisaKeyReleased
 
     /**
      * @param args the command line arguments
@@ -224,7 +244,7 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnPesquisar;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblGrupo;

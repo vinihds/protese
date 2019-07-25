@@ -79,17 +79,17 @@ public class FrmProdutoValor extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Produto");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(10, 10, 160, 20);
 
-        lblNomeProduto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblNomeProduto.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lblNomeProduto.setText("- - - - - - - - - - - - - - - - - - - - -");
         jPanel1.add(lblNomeProduto);
         lblNomeProduto.setBounds(10, 30, 380, 30);
 
-        btnSalvar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -100,7 +100,7 @@ public class FrmProdutoValor extends javax.swing.JDialog {
         jPanel1.add(btnSalvar);
         btnSalvar.setBounds(10, 160, 140, 40);
 
-        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnFechar.setText("Fechar");
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -110,12 +110,12 @@ public class FrmProdutoValor extends javax.swing.JDialog {
         jPanel1.add(btnFechar);
         btnFechar.setBounds(250, 160, 140, 40);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setText("Valor");
         jPanel1.add(jLabel3);
         jLabel3.setBounds(210, 70, 140, 20);
 
-        txtValor.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtValor.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtValor.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtValorKeyTyped(evt);
@@ -124,12 +124,12 @@ public class FrmProdutoValor extends javax.swing.JDialog {
         jPanel1.add(txtValor);
         txtValor.setBounds(210, 90, 180, 40);
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Grupo");
         jPanel1.add(jLabel4);
         jLabel4.setBounds(10, 70, 170, 20);
 
-        comboGrupo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        comboGrupo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jPanel1.add(comboGrupo);
         comboGrupo.setBounds(10, 90, 180, 40);
 

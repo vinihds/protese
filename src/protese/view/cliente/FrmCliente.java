@@ -1,5 +1,6 @@
 package protese.view.cliente;
 
+import java.awt.Font;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -21,9 +22,9 @@ import protese.util.utilidade.Utilidade;
 
 /**
  *
- * @author vinihds
+ * @author Vinicius Silveira
  */
-public class FrmCliente extends javax.swing.JFrame {
+public class FrmCliente extends javax.swing.JDialog {
 
     private ClienteDao clienteDao = ClienteDao.getInstance();
     private ContatoDao contatoDao = ContatoDao.getInstance();
@@ -38,16 +39,21 @@ public class FrmCliente extends javax.swing.JFrame {
     private Utilidade utilidade = Utilidade.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
 
-    private FrmCliente() {
+    private FrmCliente(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
     }
 
-    public FrmCliente(Cliente cliente) {
+    public FrmCliente(java.awt.Frame parent, boolean modal, Cliente cliente) {
+        super(parent, modal);
         initComponents();
 
         this.cliente = cliente;
         comboDataDeCredito.setDate(utilidade.asDate(LocalDate.now().minusDays(1)));
         comboDataAteCredito.setDate(utilidade.asDate(LocalDate.now()));
+        
+        tblContatos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblCredito.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
 
         for (ClienteEndereco clienteEndereco : this.cliente.getClienteEnderecoList()) {
             this.clienteEndereco = clienteEndereco;
@@ -75,7 +81,7 @@ public class FrmCliente extends javax.swing.JFrame {
             tabbedPaneCliente.setEnabledAt(3, false);
         }
     }
-    
+
     private void preencheCliente() {
         txtNome.setText(cliente.getNome());
         txtRg.setText(cliente.getRg());
@@ -126,7 +132,7 @@ public class FrmCliente extends javax.swing.JFrame {
                 "R$ " + utilidade.decimalFormat(credito.getValor())
             });
         }
-        
+
         atualizaCredito();
     }
 
@@ -153,6 +159,8 @@ public class FrmCliente extends javax.swing.JFrame {
         txtEmail = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         btnSalvarCliente = new javax.swing.JButton();
+        jLabel22 = new javax.swing.JLabel();
+        txtCodigoProprio = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         txtLogradouro = new javax.swing.JTextField();
@@ -203,7 +211,7 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
-        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnFechar.setText("Fechar");
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -211,50 +219,50 @@ public class FrmCliente extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnFechar);
-        btnFechar.setBounds(600, 490, 140, 40);
+        btnFechar.setBounds(600, 493, 140, 40);
 
-        tabbedPaneCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        tabbedPaneCliente.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("RG");
         jPanel2.add(jLabel1);
-        jLabel1.setBounds(10, 90, 130, 20);
+        jLabel1.setBounds(10, 170, 130, 20);
 
-        txtRg.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtRg.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel2.add(txtRg);
-        txtRg.setBounds(10, 110, 130, 40);
+        txtRg.setBounds(10, 190, 130, 40);
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Nome completo");
         jPanel2.add(jLabel2);
-        jLabel2.setBounds(10, 10, 130, 20);
+        jLabel2.setBounds(10, 90, 170, 20);
 
-        txtNome.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtNome.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel2.add(txtNome);
-        txtNome.setBounds(10, 30, 720, 40);
+        txtNome.setBounds(10, 110, 720, 40);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setText("CPF/CNPJ");
         jPanel2.add(jLabel3);
-        jLabel3.setBounds(170, 90, 170, 20);
+        jLabel3.setBounds(170, 170, 170, 20);
 
-        txtDocumento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtDocumento.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel2.add(txtDocumento);
-        txtDocumento.setBounds(170, 110, 200, 40);
+        txtDocumento.setBounds(170, 190, 200, 40);
 
-        txtEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtEmail.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel2.add(txtEmail);
-        txtEmail.setBounds(10, 190, 720, 40);
+        txtEmail.setBounds(10, 270, 720, 40);
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Email");
         jPanel2.add(jLabel4);
-        jLabel4.setBounds(10, 170, 130, 20);
+        jLabel4.setBounds(10, 250, 130, 20);
 
-        btnSalvarCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarCliente.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnSalvarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvarCliente.setText("Salvar");
         btnSalvarCliente.addActionListener(new java.awt.event.ActionListener() {
@@ -265,58 +273,67 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel2.add(btnSalvarCliente);
         btnSalvarCliente.setBounds(10, 450, 140, 40);
 
+        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel22.setText("Código próprio");
+        jPanel2.add(jLabel22);
+        jLabel22.setBounds(10, 10, 190, 20);
+
+        txtCodigoProprio.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jPanel2.add(txtCodigoProprio);
+        txtCodigoProprio.setBounds(10, 30, 190, 40);
+
         tabbedPaneCliente.addTab("Dados cadastrais", jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(null);
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel5.setText("Logradouro");
         jPanel3.add(jLabel5);
-        jLabel5.setBounds(10, 10, 130, 20);
+        jLabel5.setBounds(10, 10, 720, 20);
 
-        txtLogradouro.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtLogradouro.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtLogradouro);
         txtLogradouro.setBounds(10, 30, 720, 40);
 
-        txtBairro.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtBairro.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtBairro);
         txtBairro.setBounds(170, 110, 240, 40);
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setText("Bairro");
         jPanel3.add(jLabel6);
         jLabel6.setBounds(170, 90, 130, 20);
 
-        txtNumeroEndereco.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtNumeroEndereco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtNumeroEndereco);
         txtNumeroEndereco.setBounds(10, 110, 130, 40);
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setText("Número");
         jPanel3.add(jLabel7);
         jLabel7.setBounds(10, 90, 130, 20);
 
-        txtCidade.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtCidade.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtCidade);
         txtCidade.setBounds(10, 190, 400, 40);
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Estado");
         jPanel3.add(jLabel8);
         jLabel8.setBounds(440, 170, 130, 20);
 
-        comboEstado.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        comboEstado.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         comboEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" }));
         jPanel3.add(comboEstado);
         comboEstado.setBounds(440, 190, 130, 40);
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Cidade");
         jPanel3.add(jLabel9);
         jLabel9.setBounds(10, 170, 130, 20);
 
-        btnSalvarEndereco.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarEndereco.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnSalvarEndereco.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvarEndereco.setText("Salvar");
         btnSalvarEndereco.addActionListener(new java.awt.event.ActionListener() {
@@ -327,20 +344,20 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel3.add(btnSalvarEndereco);
         btnSalvarEndereco.setBounds(10, 450, 140, 40);
 
-        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel15.setText("Complemento");
         jPanel3.add(jLabel15);
-        jLabel15.setBounds(440, 90, 130, 20);
+        jLabel15.setBounds(440, 90, 290, 20);
 
-        txtComplemento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtComplemento.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtComplemento);
         txtComplemento.setBounds(440, 110, 290, 40);
 
-        txtCep.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtCep.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtCep);
         txtCep.setBounds(600, 190, 130, 40);
 
-        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel16.setText("CEP");
         jPanel3.add(jLabel16);
         jLabel16.setBounds(600, 170, 130, 20);
@@ -350,6 +367,7 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setLayout(null);
 
+        tblContatos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblContatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -366,7 +384,7 @@ public class FrmCliente extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblContatos.setRowHeight(25);
+        tblContatos.setRowHeight(35);
         tblContatos.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblContatos);
         if (tblContatos.getColumnModel().getColumnCount() > 0) {
@@ -380,12 +398,12 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel4.add(jSeparator1);
         jSeparator1.setBounds(10, 170, 720, 10);
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel10.setText("Cadastrar novo contato");
         jPanel4.add(jLabel10);
-        jLabel10.setBounds(10, 10, 210, 20);
+        jLabel10.setBounds(10, 10, 260, 20);
 
-        btnExcluirContato.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExcluirContato.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnExcluirContato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-excluir-25.png"))); // NOI18N
         btnExcluirContato.setText("Excluir");
         btnExcluirContato.addActionListener(new java.awt.event.ActionListener() {
@@ -396,39 +414,39 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel4.add(btnExcluirContato);
         btnExcluirContato.setBounds(10, 450, 140, 40);
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel11.setText("Listagem dos contatos");
         jPanel4.add(jLabel11);
-        jLabel11.setBounds(10, 180, 210, 20);
+        jLabel11.setBounds(10, 180, 240, 20);
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel12.setText("DDI");
         jPanel4.add(jLabel12);
         jLabel12.setBounds(10, 40, 170, 20);
 
-        txtDdi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtDdi.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel4.add(txtDdi);
         txtDdi.setBounds(10, 60, 170, 40);
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel13.setText("DDD");
         jPanel4.add(jLabel13);
         jLabel13.setBounds(200, 40, 170, 20);
 
-        txtDdd.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtDdd.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel4.add(txtDdd);
         txtDdd.setBounds(200, 60, 170, 40);
 
-        txtNumeroContato.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtNumeroContato.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel4.add(txtNumeroContato);
         txtNumeroContato.setBounds(390, 60, 340, 40);
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel14.setText("Número");
         jPanel4.add(jLabel14);
         jLabel14.setBounds(390, 40, 340, 20);
 
-        btnSalvarContato.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvarContato.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnSalvarContato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvarContato.setText("Salvar");
         btnSalvarContato.addActionListener(new java.awt.event.ActionListener() {
@@ -444,6 +462,7 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setLayout(null);
 
+        tblCredito.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblCredito.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -460,7 +479,7 @@ public class FrmCliente extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblCredito.setRowHeight(30);
+        tblCredito.setRowHeight(35);
         tblCredito.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tblCredito);
         if (tblCredito.getColumnModel().getColumnCount() > 0) {
@@ -470,33 +489,37 @@ public class FrmCliente extends javax.swing.JFrame {
         }
 
         jPanel5.add(jScrollPane2);
-        jScrollPane2.setBounds(10, 112, 720, 330);
+        jScrollPane2.setBounds(10, 110, 720, 330);
 
-        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel17.setText("Até");
         jPanel5.add(jLabel17);
         jLabel17.setBounds(450, 40, 210, 20);
 
-        comboFiltroCredito.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        comboFiltroCredito.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         comboFiltroCredito.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Somente entrada", "Somente saida" }));
         jPanel5.add(comboFiltroCredito);
         comboFiltroCredito.setBounds(10, 60, 210, 40);
 
-        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel18.setText("Listagem das movimentações de entrada e saida de crédito");
         jPanel5.add(jLabel18);
-        jLabel18.setBounds(10, 10, 510, 20);
+        jLabel18.setBounds(10, 10, 560, 20);
+
+        comboDataAteCredito.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel5.add(comboDataAteCredito);
         comboDataAteCredito.setBounds(450, 60, 210, 40);
+
+        comboDataDeCredito.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel5.add(comboDataDeCredito);
         comboDataDeCredito.setBounds(230, 60, 210, 40);
 
-        jLabel19.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel19.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel19.setText("Saldo atual");
         jPanel5.add(jLabel19);
         jLabel19.setBounds(270, 460, 100, 20);
 
-        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel20.setText("De");
         jPanel5.add(jLabel20);
         jLabel20.setBounds(230, 40, 210, 20);
@@ -510,14 +533,14 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel5.add(btnPesquisarCredito);
         btnPesquisarCredito.setBounds(670, 40, 60, 60);
 
-        lblValorCreditoCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblValorCreditoCliente.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblValorCreditoCliente.setForeground(new java.awt.Color(0, 153, 51));
         lblValorCreditoCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblValorCreditoCliente.setText("R$ 0,00");
         jPanel5.add(lblValorCreditoCliente);
-        lblValorCreditoCliente.setBounds(350, 460, 100, 20);
+        lblValorCreditoCliente.setBounds(370, 460, 100, 20);
 
-        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel21.setText("Pesquisar por");
         jPanel5.add(jLabel21);
         jLabel21.setBounds(10, 40, 210, 20);
@@ -531,11 +554,11 @@ public class FrmCliente extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 754, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
 
         pack();
@@ -555,7 +578,7 @@ public class FrmCliente extends javax.swing.JFrame {
 
         if (cliente.getId() != null && cliente.getId() > 0) {
             JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
-            
+
             liberaAbas();
         }
     }//GEN-LAST:event_btnSalvarClienteActionPerformed
@@ -587,30 +610,6 @@ public class FrmCliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSalvarEnderecoActionPerformed
 
-    private void btnSalvarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarContatoActionPerformed
-        Contato contato = new Contato();
-
-        if (!txtNumeroContato.getText().trim().isEmpty()) {
-            contato.setDdi(txtDdi.getText());
-            contato.setDdd(txtDdd.getText());
-            contato.setNumero(txtNumeroContato.getText());
-            contato = contatoDao.salvar(contato);
-
-            ClienteContato clienteContato = new ClienteContato();
-            clienteContato.setIdcliente(cliente);
-            clienteContato.setIdcontato(contato);
-            clienteContato = clienteContatoDao.salvar(clienteContato);
-
-            if (clienteContato.getId() != null && clienteContato.getId() > 0) {
-                JOptionPane.showMessageDialog(this, "Contato salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
-
-                preencheContatos();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Informe o número do contato para continuar!", "Contato", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_btnSalvarContatoActionPerformed
-
     private void btnExcluirContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirContatoActionPerformed
         ClienteContato clienteContato;
         int[] rows = tblContatos.getSelectedRows();
@@ -638,6 +637,30 @@ public class FrmCliente extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnExcluirContatoActionPerformed
+
+    private void btnSalvarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarContatoActionPerformed
+        Contato contato = new Contato();
+
+        if (!txtNumeroContato.getText().trim().isEmpty()) {
+            contato.setDdi(txtDdi.getText());
+            contato.setDdd(txtDdd.getText());
+            contato.setNumero(txtNumeroContato.getText());
+            contato = contatoDao.salvar(contato);
+
+            ClienteContato clienteContato = new ClienteContato();
+            clienteContato.setIdcliente(cliente);
+            clienteContato.setIdcontato(contato);
+            clienteContato = clienteContatoDao.salvar(clienteContato);
+
+            if (clienteContato.getId() != null && clienteContato.getId() > 0) {
+                JOptionPane.showMessageDialog(this, "Contato salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+
+                preencheContatos();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Informe o número do contato para continuar!", "Contato", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSalvarContatoActionPerformed
 
     private void btnPesquisarCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarCreditoActionPerformed
         switch (comboFiltroCredito.getSelectedIndex()) {
@@ -696,11 +719,19 @@ public class FrmCliente extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FrmCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmCliente().setVisible(true);
+                FrmCliente dialog = new FrmCliente(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
@@ -730,6 +761,7 @@ public class FrmCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -752,6 +784,7 @@ public class FrmCliente extends javax.swing.JFrame {
     private javax.swing.JTextField txtBairro;
     private javax.swing.JTextField txtCep;
     private javax.swing.JTextField txtCidade;
+    private javax.swing.JTextField txtCodigoProprio;
     private javax.swing.JTextField txtComplemento;
     private javax.swing.JTextField txtDdd;
     private javax.swing.JTextField txtDdi;

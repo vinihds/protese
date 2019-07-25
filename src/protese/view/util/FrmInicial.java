@@ -25,6 +25,12 @@ public class FrmInicial extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jButton3 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
+        jButton13 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuCliente = new javax.swing.JMenuItem();
@@ -41,12 +47,36 @@ public class FrmInicial extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
-        jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButton3.setText("jButton1");
+        jPanel1.add(jButton3);
+        jButton3.setBounds(20, 20, 190, 130);
+
+        jButton10.setText("jButton1");
+        jPanel1.add(jButton10);
+        jButton10.setBounds(20, 190, 190, 130);
+
+        jButton11.setText("jButton1");
+        jPanel1.add(jButton11);
+        jButton11.setBounds(540, 20, 190, 130);
+
+        jButton12.setText("jButton1");
+        jPanel1.add(jButton12);
+        jButton12.setBounds(280, 190, 190, 130);
+
+        jButton13.setText("jButton1");
+        jPanel1.add(jButton13);
+        jButton13.setBounds(540, 190, 190, 130);
+
+        jButton14.setText("jButton1");
+        jPanel1.add(jButton14);
+        jButton14.setBounds(280, 20, 190, 130);
+
+        jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jMenu1.setText("Cadastro");
-        jMenu1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jMenu1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
 
-        menuCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuCliente.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         menuCliente.setText("Cliente");
         menuCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -55,7 +85,7 @@ public class FrmInicial extends javax.swing.JFrame {
         });
         jMenu1.add(menuCliente);
 
-        menuGrupo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuGrupo.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         menuGrupo.setText("Grupo");
         menuGrupo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -64,7 +94,7 @@ public class FrmInicial extends javax.swing.JFrame {
         });
         jMenu1.add(menuGrupo);
 
-        menuProduto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuProduto.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         menuProduto.setText("Produto");
         menuProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -76,9 +106,9 @@ public class FrmInicial extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Serviço");
-        jMenu2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jMenu2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
 
-        menuNovoServico.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuNovoServico.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         menuNovoServico.setText("Novo serviço");
         menuNovoServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,7 +118,7 @@ public class FrmInicial extends javax.swing.JFrame {
         jMenu2.add(menuNovoServico);
         jMenu2.add(jSeparator1);
 
-        menuGerenciarServico.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuGerenciarServico.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         menuGerenciarServico.setText("Serviços");
         menuGerenciarServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,11 +135,11 @@ public class FrmInicial extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
         );
 
         pack();
@@ -134,7 +164,7 @@ public class FrmInicial extends javax.swing.JFrame {
     }//GEN-LAST:event_menuProdutoActionPerformed
 
     private void menuNovoServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNovoServicoActionPerformed
-        FrmServico frm = new FrmServico(new Servico());
+        FrmServico frm = new FrmServico(this, true, new Servico());
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
     }//GEN-LAST:event_menuNovoServicoActionPerformed
@@ -181,6 +211,12 @@ public class FrmInicial extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

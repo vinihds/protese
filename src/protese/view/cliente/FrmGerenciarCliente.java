@@ -1,5 +1,6 @@
 package protese.view.cliente;
 
+import java.awt.Font;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +18,8 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
 
     public FrmGerenciarCliente() {
         initComponents();
-
+        
+        tblCliente.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
         modelo = (DefaultTableModel) tblCliente.getModel();
 
         preencherTabela(clienteDao.retornaTodos());
@@ -27,7 +29,7 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
         modelo.setRowCount(0);
 
         for (Cliente cliente : clienteList) {
-            modelo.addRow(new Object[]{cliente.getId(), cliente.getNome(), cliente.getDocumento()});
+            modelo.addRow(new Object[]{cliente.getId(), cliente.getCodigoProprio(), cliente.getNome(), cliente.getDocumento()});
         }
     }
 
@@ -36,8 +38,6 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        comboPesquisa = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         txtPesquisa = new javax.swing.JTextField();
         btnPesquisar = new javax.swing.JButton();
@@ -54,24 +54,19 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Pesquisar por");
-        jPanel1.add(jLabel1);
-        jLabel1.setBounds(10, 10, 130, 20);
-
-        comboPesquisa.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        comboPesquisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Nome" }));
-        jPanel1.add(comboPesquisa);
-        comboPesquisa.setBounds(10, 30, 200, 40);
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("Pesquisa");
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setText("Pesquisar por nome ou código próprio");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(220, 10, 90, 20);
+        jLabel2.setBounds(10, 10, 450, 20);
 
-        txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPesquisaKeyReleased(evt);
+            }
+        });
         jPanel1.add(txtPesquisa);
-        txtPesquisa.setBounds(220, 30, 580, 40);
+        txtPesquisa.setBounds(10, 30, 790, 40);
 
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
@@ -82,23 +77,24 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
         jPanel1.add(btnPesquisar);
         btnPesquisar.setBounds(810, 10, 60, 60);
 
+        tblCliente.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Nome", "Documento"
+                "ID", "Código próprio", "Nome", "Documento"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblCliente.setRowHeight(30);
+        tblCliente.setRowHeight(35);
         tblCliente.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblCliente);
         if (tblCliente.getColumnModel().getColumnCount() > 0) {
@@ -110,7 +106,7 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1);
         jScrollPane1.setBounds(10, 80, 860, 470);
 
-        btnNovo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnNovo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnNovo.setText("Novo");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,7 +116,7 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
         jPanel1.add(btnNovo);
         btnNovo.setBounds(10, 560, 140, 40);
 
-        btnAlterar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnAlterar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnAlterar.setText("Dados");
         btnAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,7 +126,7 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
         jPanel1.add(btnAlterar);
         btnAlterar.setBounds(160, 560, 140, 40);
 
-        btnExcluir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExcluir.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnExcluir.setText("Excluir");
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +136,7 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
         jPanel1.add(btnExcluir);
         btnExcluir.setBounds(310, 560, 140, 40);
 
-        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnFechar.setText("Fechar");
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -165,9 +161,11 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        FrmCliente frm = new FrmCliente(new Cliente());
+        FrmCliente frm = new FrmCliente(this, true, new Cliente());
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
+        
+        btnPesquisarActionPerformed(null);
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
@@ -177,9 +175,11 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
             try {
                 Cliente cliente = clienteDao.consultarId(Cliente.class, Long.parseLong(modelo.getValueAt(rows[0], 0).toString()));
 
-                FrmCliente frm = new FrmCliente(cliente);
+                FrmCliente frm = new FrmCliente(this, true, cliente);
                 frm.setLocationRelativeTo(null);
                 frm.setVisible(true);
+
+                btnPesquisarActionPerformed(null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -187,19 +187,12 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        switch (comboPesquisa.getSelectedIndex()) {
-            case 0:
-                preencherTabela(clienteDao.retornaTodos());
+        try {
+            preencherTabela(clienteDao.retornaTodosPorNomeOuCodigoProprio(txtPesquisa.getText()));
+        } catch (Exception e) {
+            e.printStackTrace();
 
-                break;
-            case 1:
-                preencherTabela(clienteDao.retornaTodosPorNome(txtPesquisa.getText()));
-
-                break;
-            default:
-                preencherTabela(clienteDao.retornaTodos());
-
-                break;
+            preencherTabela(clienteDao.retornaTodos());
         }
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
@@ -234,6 +227,10 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
+
+    private void txtPesquisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisaKeyReleased
+        btnPesquisarActionPerformed(null);
+    }//GEN-LAST:event_txtPesquisaKeyReleased
 
     /**
      * @param args the command line arguments
@@ -276,8 +273,6 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnPesquisar;
-    private javax.swing.JComboBox<String> comboPesquisa;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

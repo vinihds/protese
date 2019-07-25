@@ -1,4 +1,3 @@
-
 package protese.view.produto;
 
 import javax.swing.JOptionPane;
@@ -7,15 +6,16 @@ import protese.model.produto.Grupo;
 
 /**
  *
- * @author vinihds
+ * @author Vinicius Silveira
  */
-public class FrmGrupo extends javax.swing.JFrame {
+public class FrmGrupo extends javax.swing.JDialog {
 
     private GrupoDao grupoDao = GrupoDao.getInstance();
-    
+
     private Grupo grupo = new Grupo();
-    
-    public FrmGrupo() {
+
+    public FrmGrupo(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
     }
 
@@ -37,25 +37,25 @@ public class FrmGrupo extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Nome");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(10, 10, 130, 20);
 
-        txtNome.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtNome.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel1.add(txtNome);
         txtNome.setBounds(10, 30, 320, 40);
 
-        txtCodigo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtCodigo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel1.add(txtCodigo);
         txtCodigo.setBounds(10, 100, 160, 40);
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Código próprio");
         jPanel1.add(jLabel2);
         jLabel2.setBounds(10, 80, 160, 20);
 
-        btnSalvar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnSalvar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-selecionado-25.png"))); // NOI18N
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -66,7 +66,7 @@ public class FrmGrupo extends javax.swing.JFrame {
         jPanel1.add(btnSalvar);
         btnSalvar.setBounds(10, 160, 140, 40);
 
-        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnFechar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnFechar.setText("Fechar");
         btnFechar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -80,29 +80,29 @@ public class FrmGrupo extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btnFecharActionPerformed
-
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         grupo.setNome(txtNome.getText());
         grupo.setCodigo(txtCodigo.getText());
         grupo = grupoDao.salvar(grupo);
-        
+
         if (grupo.getId() != null) {
             JOptionPane.showMessageDialog(this, "Grupo salvo com sucesso!", "Grupo", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnFecharActionPerformed
 
     /**
      * @param args the command line arguments
@@ -130,11 +130,19 @@ public class FrmGrupo extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FrmGrupo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmGrupo().setVisible(true);
+                FrmGrupo dialog = new FrmGrupo(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

@@ -53,13 +53,13 @@ public class GrupoDao extends Dao<Grupo> {
         return resultset;
     }
 
-    public List<Grupo> retornaTodosPesquisa(String pesquisa) {
+    public List<Grupo> retornaTodosPorNomeOuCodigoProprio(String pesquisa) {
         List<Grupo> resultset = new ArrayList();
 
         Query query = createQuery("SELECT grupo FROM Grupo AS grupo "
                 + " WHERE grupo.excluido = false "
-                + " AND (grupo.nome LIKE :pesquisa "
-                + "     OR grupo.codigo LIKE :pesquisa) "
+                + " AND (LOWER(grupo.nome) LIKE LOWER(:pesquisa) "
+                + "     OR LOWER(grupo.codigo) LIKE LOWER(:pesquisa)) "
                 + " ORDER BY grupo.codigo");
         query.setParameter("pesquisa", "%" + pesquisa + "%");
 

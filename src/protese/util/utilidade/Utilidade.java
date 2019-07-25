@@ -30,6 +30,8 @@ public class Utilidade {
     private static final DateTimeFormatter dataMYLocalDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter dataMYTimeStampLocalDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    private static final DateTimeFormatter mesAno = DateTimeFormatter.ofPattern("MMM/yyyy");
+
     private Utilidade() {
     }
 
@@ -39,7 +41,7 @@ public class Utilidade {
         }
         return unique;
     }
-    
+
     public static String decimalFormat(double numero) {
         try {
             return decimalFormat.format(numero);
@@ -64,7 +66,7 @@ public class Utilidade {
     public static LocalDateTime asLocalDateTime(Date date) {
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
-    
+
     public static String sdf(LocalDateTime data) {
         return data.format(sdfLocalDate);
     }
@@ -80,7 +82,7 @@ public class Utilidade {
     public static String dataMYTimeStamp(LocalDateTime data) {
         return data.format(dataMYTimeStampLocalDate);
     }
-    
+
     public static LocalDate sdf(String data) {
         return LocalDate.parse(data, sdfLocalDate);
     }
@@ -95,5 +97,9 @@ public class Utilidade {
 
     public static LocalDateTime dataMYTimeStamp(String data) {
         return LocalDateTime.parse(data, dataMYTimeStampLocalDate);
+    }
+
+    public static String mesAno(LocalDateTime data) {
+        return data.format(mesAno);
     }
 }

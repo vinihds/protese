@@ -51,6 +51,8 @@ public class Servico implements Serializable, Entidade {
     private LocalDateTime dataCriacao;
     @Column(name = "data_finalizacao")
     private LocalDateTime dataFinalizacao;
+    @Column(name = "data_referente")
+    private LocalDateTime dataReferente;
     @Basic(optional = false)
     @Column(name = "excluido")
     private boolean excluido;
@@ -205,5 +207,15 @@ public class Servico implements Serializable, Entidade {
     public void setClienteCreditoEntradaList(List<ClienteCreditoEntrada> clienteCreditoEntradaList) {
         this.clienteCreditoEntradaList = clienteCreditoEntradaList;
     }
+
+    public LocalDateTime getDataReferente() {
+        return dataReferente;
+    }
+
+    public void setDataReferente(LocalDateTime dataReferente) {
+        this.dataReferente = dataReferente;
+    }
+    
+    
 
 }

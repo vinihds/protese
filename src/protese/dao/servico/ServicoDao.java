@@ -51,7 +51,7 @@ public class ServicoDao extends Dao<Servico> {
 
         Query query = createQuery("SELECT servico FROM Servico AS servico "
                 + " WHERE servico.excluido = false "
-                + " ORDER BY servico.dataCriacao DESC");
+                + " ORDER BY servico.dataReferente DESC");
 
         resultset = query.getResultList();
 
@@ -65,14 +65,14 @@ public class ServicoDao extends Dao<Servico> {
                 + " INNER JOIN servico.idcliente AS cliente "
                 + " WHERE servico.excluido = false "
                 + " AND servico.idcliente = :cliente "
-                + " ORDER BY servico.dataCriacao DESC");
+                + " ORDER BY servico.dataReferente DESC");
         query.setParameter("cliente", cliente);
 
         resultset = query.getResultList();
 
         return resultset;
     }
-    
+
     public List<Servico> retornaTodosPorClienteNome(String pesquisa) {
         List<Servico> resultset = new ArrayList();
 
@@ -81,14 +81,14 @@ public class ServicoDao extends Dao<Servico> {
                 + " WHERE servico.excluido = false "
                 + " AND (cliente.nome LIKE :pesquisa "
                 + "     OR cliente.documento LIKE :pesquisa) "
-                + " ORDER BY servico.dataCriacao DESC");
+                + " ORDER BY servico.dataReferente DESC");
         query.setParameter("pesquisa", "%" + pesquisa + "%");
 
         resultset = query.getResultList();
 
         return resultset;
     }
-    
+
     public List<Servico> retornaTodosPorTitulo(String pesquisa) {
         List<Servico> resultset = new ArrayList();
 
@@ -96,7 +96,7 @@ public class ServicoDao extends Dao<Servico> {
                 + " WHERE servico.excluido = false "
                 + " AND (servico.titulo LIKE :pesquisa "
                 + "     OR servico.descricao LIKE :pesquisa) "
-                + " ORDER BY servico.dataCriacao DESC");
+                + " ORDER BY servico.dataReferente DESC");
         query.setParameter("pesquisa", "%" + pesquisa + "%");
 
         resultset = query.getResultList();
@@ -131,7 +131,7 @@ public class ServicoDao extends Dao<Servico> {
                 + " AND (servico.titulo LIKE :pesquisa "
                 + "     OR servico.descricao LIKE :pesquisa) "
                 + " AND servico.dataFinalizacao IS NOT NULL "
-                + " ORDER BY servico.dataCriacao DESC");
+                + " ORDER BY servico.dataReferente DESC");
         query.setParameter("pesquisa", "%" + pesquisa + "%");
 
         resultset = query.getResultList();
@@ -147,8 +147,47 @@ public class ServicoDao extends Dao<Servico> {
                 + " AND (servico.titulo LIKE :pesquisa "
                 + "     OR servico.descricao LIKE :pesquisa) "
                 + " AND servico.dataFinalizacao IS NULL "
-                + " ORDER BY servico.dataCriacao DESC");
+                + " ORDER BY servico.dataReferente DESC");
         query.setParameter("pesquisa", "%" + pesquisa + "%");
+
+        resultset = query.getResultList();
+
+        return resultset;
+    }
+
+    public List<Servico> retornaTodosPorPesquisa(String pesquisa, Cliente cliente, LocalDateTime dataInicial, LocalDateTime dataFinal, int filtro) {
+        List<Servico> resultset = new ArrayList();
+
+        String sql = "SELECT servico FROM Servico AS servico "
+                + " INNER JOIN servico.idcliente AS cliente "
+                + " WHERE servico.excluido = false "
+                + " AND (LOWER(servico.titulo) LIKE LOWER(:pesquisa) "
+                + "     OR LOWER(servico.descricao) LIKE LOWER(:pesquisa)) "
+                + " AND servico.dataReferente BETWEEN :dataInicial AND :dataFinal ";
+
+        if (cliente.getId() != null && cliente.getId() > 0) {
+            sql += " AND servico.idcliente = :cliente ";
+        }
+
+        if (filtro == 1) {
+            //Em aberto
+            sql += " AND servico.dataFinalizacao IS NULL ";
+        } else if (filtro == 2) {
+            //Finalizados
+            sql += " AND servico.dataFinalizacao IS NOT NULL ";
+        }
+
+        sql += " ORDER BY servico.dataReferente DESC";
+
+        Query query = createQuery(sql);
+        query.setParameter("pesquisa", "%" + pesquisa + "%");
+
+        if (cliente.getId() != null && cliente.getId() > 0) {
+            query.setParameter("cliente", cliente);
+        }
+
+        query.setParameter("dataInicial", dataInicial);
+        query.setParameter("dataFinal", dataFinal);
 
         resultset = query.getResultList();
 
