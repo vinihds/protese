@@ -65,6 +65,8 @@ public class Cliente implements Serializable, Entidade {
     private List<ClienteCreditoSaida> clienteCreditoSaidaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idcliente", fetch = FetchType.LAZY)
     private List<Servico> servicoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idcliente", fetch = FetchType.LAZY)
+    private List<ClienteDebito> clienteDebitoList;
 
     public Cliente() {
     }
@@ -237,6 +239,15 @@ public class Cliente implements Serializable, Entidade {
         }
 
         return totalEntrada - totalSaida;
+    }
+
+    @XmlTransient
+    public List<ClienteDebito> getClienteDebitoList() {
+        return clienteDebitoList;
+    }
+
+    public void setClienteDebitoList(List<ClienteDebito> clienteDebitoList) {
+        this.clienteDebitoList = clienteDebitoList;
     }
 
 }

@@ -24,7 +24,6 @@ import protese.dao.servico.ServicoDetalheDao;
 import protese.dao.servico.ServicoPagamentoDao;
 import protese.jpa.interfaces.Entidade;
 import protese.model.cliente.Cliente;
-import protese.model.cliente.ClienteCreditoEntrada;
 
 /**
  *
@@ -36,7 +35,7 @@ import protese.model.cliente.ClienteCreditoEntrada;
 @NamedQueries({
     @NamedQuery(name = "Servico.findAll", query = "SELECT s FROM Servico s")})
 public class Servico implements Serializable, Entidade {
-   
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +63,9 @@ public class Servico implements Serializable, Entidade {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idservico", fetch = FetchType.LAZY)
     private List<ServicoDetalhe> servicoDetalheList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idservico", fetch = FetchType.LAZY)
-    private List<ClienteCreditoEntrada> clienteCreditoEntradaList;
+    private List<ServicoCredito> servicoCreditoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idservico", fetch = FetchType.LAZY)
+    private List<ServicoDebito> servicoDebitoList;
 
     public Servico() {
     }
@@ -199,15 +200,6 @@ public class Servico implements Serializable, Entidade {
         return restantePagar < 0 ? 0 : restantePagar;
     }
 
-    @XmlTransient
-    public List<ClienteCreditoEntrada> getClienteCreditoEntradaList() {
-        return clienteCreditoEntradaList;
-    }
-
-    public void setClienteCreditoEntradaList(List<ClienteCreditoEntrada> clienteCreditoEntradaList) {
-        this.clienteCreditoEntradaList = clienteCreditoEntradaList;
-    }
-
     public LocalDateTime getDataReferente() {
         return dataReferente;
     }
@@ -215,7 +207,23 @@ public class Servico implements Serializable, Entidade {
     public void setDataReferente(LocalDateTime dataReferente) {
         this.dataReferente = dataReferente;
     }
-    
-    
+
+    @XmlTransient
+    public List<ServicoCredito> getServicoCreditoList() {
+        return servicoCreditoList;
+    }
+
+    public void setServicoCreditoList(List<ServicoCredito> servicoCreditoList) {
+        this.servicoCreditoList = servicoCreditoList;
+    }
+
+    @XmlTransient
+    public List<ServicoDebito> getServicoDebitoList() {
+        return servicoDebitoList;
+    }
+
+    public void setServicoDebitoList(List<ServicoDebito> servicoDebitoList) {
+        this.servicoDebitoList = servicoDebitoList;
+    }
 
 }

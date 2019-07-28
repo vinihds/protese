@@ -9,6 +9,7 @@ import protese.model.cliente.Cliente;
 import protese.model.cliente.ClienteCreditoEntrada;
 import protese.model.cliente.ClienteCreditoSaida;
 import protese.model.cliente.Credito;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -20,6 +21,7 @@ public class CreditoDao extends Dao<Credito> {
 
     private ClienteCreditoEntradaDao creditoEntradaDao = ClienteCreditoEntradaDao.getInstance();
     private ClienteCreditoSaidaDao creditoSaidaDao = ClienteCreditoSaidaDao.getInstance();
+    private Utilidade utilidade = Utilidade.getInstance();
 
     private CreditoDao() {
     }
@@ -35,9 +37,9 @@ public class CreditoDao extends Dao<Credito> {
         Credito credito = new Credito();
 
         credito.setIdcredito(creditoEntrada.getId());
-        credito.setServico(creditoEntrada.getIdservico());
+        credito.setDescricao(creditoEntrada.getDescricao());
         credito.setTipo("Entrada");
-        credito.setData(creditoEntrada.getIdservico().getDataFinalizacao());
+        credito.setData(creditoEntrada.getData());
         credito.setValor(creditoEntrada.getValorCredito());
 
         return credito;
@@ -47,7 +49,7 @@ public class CreditoDao extends Dao<Credito> {
         Credito credito = new Credito();
 
         credito.setIdcredito(creditoSaida.getId());
-        credito.setServico(creditoSaida.getIdservicoPagamento().getIdservico());
+        credito.setDescricao("Utilização de crédito no serviço de " + utilidade.mesAno(creditoSaida.getIdservicoPagamento().getIdservico().getDataReferente()).toUpperCase());
         credito.setTipo("Saida");
         credito.setData(creditoSaida.getIdservicoPagamento().getIdpagamento().getDataPagamento());
         credito.setValor(creditoSaida.getIdservicoPagamento().getIdpagamento().getValor());

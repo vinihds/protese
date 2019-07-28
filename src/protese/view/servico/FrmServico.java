@@ -1,5 +1,6 @@
 package protese.view.servico;
 
+import java.awt.Font;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +58,9 @@ public class FrmServico extends javax.swing.JDialog {
         preencheFormaPagamentoList();
         preencheMes();
         preencheAnos();
+        
+        tblPagamentos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblServicoDetalhe.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
 
         if (this.servico.getId() != null && this.servico.getId() > 0) {
             cliente = servico.getIdcliente();
@@ -632,6 +636,7 @@ public class FrmServico extends javax.swing.JDialog {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setLayout(null);
 
+        tblPagamentos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblPagamentos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -826,11 +831,11 @@ public class FrmServico extends javax.swing.JDialog {
     }//GEN-LAST:event_btnPesquisarClienteActionPerformed
 
     private void btnFinalizarServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarServicoActionPerformed
-        if (servico.getId() != null && servico.getId() > 0 && servico.getDataFinalizacao() == null && servico.getRestantePagar() <= 0) {
+        if (servico.getId() != null && servico.getId() > 0 && servico.getDataFinalizacao() == null) {
 
             if (JOptionPane.showConfirmDialog(
                     this,
-                    "Deseja realmente excluir estes produtos do serviço?",
+                    "Deseja realmente finalizar este serviço?",
                     "Produtos do serviço",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {

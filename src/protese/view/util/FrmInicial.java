@@ -3,6 +3,7 @@ package protese.view.util;
 import protese.view.cliente.FrmGerenciarCliente;
 import javax.swing.JFrame;
 import protese.model.servico.Servico;
+import protese.view.consulta.FrmMovimentacaoCreditoCliente;
 import protese.view.produto.FrmGerenciarGrupo;
 import protese.view.produto.FrmGerenciarProduto;
 import protese.view.servico.FrmGerenciarServico;
@@ -40,6 +41,8 @@ public class FrmInicial extends javax.swing.JFrame {
         menuNovoServico = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuGerenciarServico = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dentista");
@@ -76,7 +79,7 @@ public class FrmInicial extends javax.swing.JFrame {
         jMenu1.setText("Cadastro");
         jMenu1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
 
-        menuCliente.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        menuCliente.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         menuCliente.setText("Cliente");
         menuCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,7 +88,7 @@ public class FrmInicial extends javax.swing.JFrame {
         });
         jMenu1.add(menuCliente);
 
-        menuGrupo.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        menuGrupo.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         menuGrupo.setText("Grupo");
         menuGrupo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -94,7 +97,7 @@ public class FrmInicial extends javax.swing.JFrame {
         });
         jMenu1.add(menuGrupo);
 
-        menuProduto.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        menuProduto.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         menuProduto.setText("Produto");
         menuProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -108,7 +111,7 @@ public class FrmInicial extends javax.swing.JFrame {
         jMenu2.setText("Serviço");
         jMenu2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
 
-        menuNovoServico.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        menuNovoServico.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         menuNovoServico.setText("Novo serviço");
         menuNovoServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,7 +121,7 @@ public class FrmInicial extends javax.swing.JFrame {
         jMenu2.add(menuNovoServico);
         jMenu2.add(jSeparator1);
 
-        menuGerenciarServico.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        menuGerenciarServico.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         menuGerenciarServico.setText("Serviços");
         menuGerenciarServico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,6 +131,20 @@ public class FrmInicial extends javax.swing.JFrame {
         jMenu2.add(menuGerenciarServico);
 
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Consultas");
+        jMenu3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+
+        jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jMenuItem1.setText("Movimentações de créditos");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -175,6 +192,12 @@ public class FrmInicial extends javax.swing.JFrame {
         frm.setVisible(true);
     }//GEN-LAST:event_menuGerenciarServicoActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        FrmMovimentacaoCreditoCliente frm = new FrmMovimentacaoCreditoCliente();
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -219,7 +242,9 @@ public class FrmInicial extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuItem menuCliente;

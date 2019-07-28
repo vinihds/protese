@@ -8,6 +8,7 @@ import protese.jpa.interfaces.Dao;
 import protese.model.cliente.Cliente;
 import protese.model.cliente.ClienteCreditoEntrada;
 import protese.model.servico.Servico;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -16,6 +17,8 @@ import protese.model.servico.Servico;
 public class ClienteCreditoEntradaDao extends Dao<ClienteCreditoEntrada> {
 
     private static ClienteCreditoEntradaDao unique = null;
+
+    Utilidade utilidade = Utilidade.getInstance();
 
     private ClienteCreditoEntradaDao() {
     }
@@ -62,11 +65,11 @@ public class ClienteCreditoEntradaDao extends Dao<ClienteCreditoEntrada> {
 
     public ClienteCreditoEntrada salvarClienteCreditoEntrada(Cliente cliente, Servico servico, double valorCredito) {
         ClienteCreditoEntrada creditoEntrada = new ClienteCreditoEntrada();
-        
+
         creditoEntrada.setIdcliente(cliente);
-        creditoEntrada.setIdservico(servico);
+        creditoEntrada.setDescricao("Entrada de crédito referente ao serviço de " + utilidade.mesAno(servico.getDataReferente()).toUpperCase());
         creditoEntrada.setValorCredito(valorCredito);
-        
+
         return salvar(creditoEntrada);
     }
 

@@ -1,7 +1,10 @@
 package protese.model.cliente;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,10 +15,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import protese.jpa.interfaces.Entidade;
-import protese.model.servico.Servico;
+import protese.model.servico.ServicoCredito;
 
 /**
  *
@@ -37,15 +42,18 @@ public class ClienteCreditoEntrada implements Serializable, Entidade {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "valor_credito")
     private Double valorCredito;
+    @Column(name = "descricao")
+    private String descricao;
+    @Column(name = "data")
+    private LocalDateTime data;
     @Basic(optional = false)
     @Column(name = "excluido")
     private boolean excluido;
     @JoinColumn(name = "idcliente", referencedColumnName = "idcliente")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Cliente idcliente;
-    @JoinColumn(name = "idservico", referencedColumnName = "idservico")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Servico idservico;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idclienteCreditoEntrada", fetch = FetchType.LAZY)
+    private List<ServicoCredito> servicoCreditoList;
 
     public ClienteCreditoEntrada() {
     }
@@ -96,12 +104,29 @@ public class ClienteCreditoEntrada implements Serializable, Entidade {
         this.idcliente = idcliente;
     }
 
-    public Servico getIdservico() {
-        return idservico;
+    @XmlTransient
+    public List<ServicoCredito> getServicoCreditoList() {
+        return servicoCreditoList;
     }
 
-    public void setIdservico(Servico idservico) {
-        this.idservico = idservico;
+    public void setServicoCreditoList(List<ServicoCredito> servicoCreditoList) {
+        this.servicoCreditoList = servicoCreditoList;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    public void setData(LocalDateTime data) {
+        this.data = data;
     }
 
 }

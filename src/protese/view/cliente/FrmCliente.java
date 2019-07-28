@@ -126,7 +126,7 @@ public class FrmCliente extends javax.swing.JDialog {
         for (Credito credito : creditoList) {
             modelo.addRow(new Object[]{
                 credito.getId(),
-                credito.getServico().getTitulo(),
+                credito.getDescricao(),
                 utilidade.sdfTimeStamp(credito.getData()),
                 credito.getTipo(),
                 "R$ " + utilidade.decimalFormat(credito.getValor())
@@ -219,7 +219,7 @@ public class FrmCliente extends javax.swing.JDialog {
             }
         });
         jPanel1.add(btnFechar);
-        btnFechar.setBounds(600, 493, 140, 40);
+        btnFechar.setBounds(680, 533, 140, 40);
 
         tabbedPaneCliente.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
 
@@ -242,7 +242,7 @@ public class FrmCliente extends javax.swing.JDialog {
 
         txtNome.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel2.add(txtNome);
-        txtNome.setBounds(10, 110, 720, 40);
+        txtNome.setBounds(10, 110, 800, 40);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setText("CPF/CNPJ");
@@ -255,7 +255,7 @@ public class FrmCliente extends javax.swing.JDialog {
 
         txtEmail.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel2.add(txtEmail);
-        txtEmail.setBounds(10, 270, 720, 40);
+        txtEmail.setBounds(10, 270, 800, 40);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Email");
@@ -271,7 +271,7 @@ public class FrmCliente extends javax.swing.JDialog {
             }
         });
         jPanel2.add(btnSalvarCliente);
-        btnSalvarCliente.setBounds(10, 450, 140, 40);
+        btnSalvarCliente.setBounds(10, 490, 140, 40);
 
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel22.setText("Código próprio");
@@ -294,20 +294,20 @@ public class FrmCliente extends javax.swing.JDialog {
 
         txtLogradouro.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtLogradouro);
-        txtLogradouro.setBounds(10, 30, 720, 40);
+        txtLogradouro.setBounds(10, 30, 800, 40);
 
         txtBairro.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtBairro);
-        txtBairro.setBounds(170, 110, 240, 40);
+        txtBairro.setBounds(190, 110, 270, 40);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setText("Bairro");
         jPanel3.add(jLabel6);
-        jLabel6.setBounds(170, 90, 130, 20);
+        jLabel6.setBounds(190, 90, 130, 20);
 
         txtNumeroEndereco.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtNumeroEndereco);
-        txtNumeroEndereco.setBounds(10, 110, 130, 40);
+        txtNumeroEndereco.setBounds(10, 110, 150, 40);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setText("Número");
@@ -316,17 +316,17 @@ public class FrmCliente extends javax.swing.JDialog {
 
         txtCidade.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtCidade);
-        txtCidade.setBounds(10, 190, 400, 40);
+        txtCidade.setBounds(10, 190, 450, 40);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Estado");
         jPanel3.add(jLabel8);
-        jLabel8.setBounds(440, 170, 130, 20);
+        jLabel8.setBounds(490, 170, 130, 20);
 
         comboEstado.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         comboEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" }));
         jPanel3.add(comboEstado);
-        comboEstado.setBounds(440, 190, 130, 40);
+        comboEstado.setBounds(490, 190, 140, 40);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Cidade");
@@ -342,25 +342,25 @@ public class FrmCliente extends javax.swing.JDialog {
             }
         });
         jPanel3.add(btnSalvarEndereco);
-        btnSalvarEndereco.setBounds(10, 450, 140, 40);
+        btnSalvarEndereco.setBounds(10, 490, 140, 40);
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel15.setText("Complemento");
         jPanel3.add(jLabel15);
-        jLabel15.setBounds(440, 90, 290, 20);
+        jLabel15.setBounds(490, 90, 290, 20);
 
         txtComplemento.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtComplemento);
-        txtComplemento.setBounds(440, 110, 290, 40);
+        txtComplemento.setBounds(490, 110, 320, 40);
 
         txtCep.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel3.add(txtCep);
-        txtCep.setBounds(600, 190, 130, 40);
+        txtCep.setBounds(660, 190, 150, 40);
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel16.setText("CEP");
         jPanel3.add(jLabel16);
-        jLabel16.setBounds(600, 170, 130, 20);
+        jLabel16.setBounds(660, 170, 130, 20);
 
         tabbedPaneCliente.addTab("Endereço", jPanel3);
 
@@ -394,9 +394,9 @@ public class FrmCliente extends javax.swing.JDialog {
         }
 
         jPanel4.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 200, 720, 240);
+        jScrollPane1.setBounds(10, 200, 800, 270);
         jPanel4.add(jSeparator1);
-        jSeparator1.setBounds(10, 170, 720, 10);
+        jSeparator1.setBounds(10, 170, 800, 10);
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel10.setText("Cadastrar novo contato");
@@ -412,7 +412,7 @@ public class FrmCliente extends javax.swing.JDialog {
             }
         });
         jPanel4.add(btnExcluirContato);
-        btnExcluirContato.setBounds(10, 450, 140, 40);
+        btnExcluirContato.setBounds(10, 490, 140, 40);
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel11.setText("Listagem dos contatos");
@@ -439,7 +439,7 @@ public class FrmCliente extends javax.swing.JDialog {
 
         txtNumeroContato.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel4.add(txtNumeroContato);
-        txtNumeroContato.setBounds(390, 60, 340, 40);
+        txtNumeroContato.setBounds(390, 60, 420, 40);
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel14.setText("Número");
@@ -489,12 +489,12 @@ public class FrmCliente extends javax.swing.JDialog {
         }
 
         jPanel5.add(jScrollPane2);
-        jScrollPane2.setBounds(10, 110, 720, 330);
+        jScrollPane2.setBounds(10, 110, 800, 360);
 
         jLabel17.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel17.setText("Até");
         jPanel5.add(jLabel17);
-        jLabel17.setBounds(450, 40, 210, 20);
+        jLabel17.setBounds(490, 40, 210, 20);
 
         comboFiltroCredito.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         comboFiltroCredito.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Somente entrada", "Somente saida" }));
@@ -508,16 +508,16 @@ public class FrmCliente extends javax.swing.JDialog {
 
         comboDataAteCredito.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel5.add(comboDataAteCredito);
-        comboDataAteCredito.setBounds(450, 60, 210, 40);
+        comboDataAteCredito.setBounds(490, 60, 250, 40);
 
         comboDataDeCredito.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jPanel5.add(comboDataDeCredito);
-        comboDataDeCredito.setBounds(230, 60, 210, 40);
+        comboDataDeCredito.setBounds(230, 60, 250, 40);
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel19.setText("Saldo atual");
         jPanel5.add(jLabel19);
-        jLabel19.setBounds(270, 460, 100, 20);
+        jLabel19.setBounds(270, 500, 100, 20);
 
         jLabel20.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel20.setText("De");
@@ -531,14 +531,14 @@ public class FrmCliente extends javax.swing.JDialog {
             }
         });
         jPanel5.add(btnPesquisarCredito);
-        btnPesquisarCredito.setBounds(670, 40, 60, 60);
+        btnPesquisarCredito.setBounds(750, 40, 60, 60);
 
         lblValorCreditoCliente.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         lblValorCreditoCliente.setForeground(new java.awt.Color(0, 153, 51));
         lblValorCreditoCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblValorCreditoCliente.setText("R$ 0,00");
         jPanel5.add(lblValorCreditoCliente);
-        lblValorCreditoCliente.setBounds(370, 460, 100, 20);
+        lblValorCreditoCliente.setBounds(370, 500, 100, 20);
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel21.setText("Pesquisar por");
@@ -548,17 +548,17 @@ public class FrmCliente extends javax.swing.JDialog {
         tabbedPaneCliente.addTab("Crédito", jPanel5);
 
         jPanel1.add(tabbedPaneCliente);
-        tabbedPaneCliente.setBounds(10, 10, 750, 530);
+        tabbedPaneCliente.setBounds(10, 10, 830, 570);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 846, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
         );
 
         pack();
