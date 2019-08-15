@@ -1,24 +1,18 @@
 package protese.view.cliente;
 
 import java.awt.Font;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import protese.dao.cliente.ClienteContatoDao;
 import protese.dao.cliente.ClienteDao;
 import protese.dao.cliente.ClienteEnderecoDao;
 import protese.dao.cliente.ContatoDao;
-import protese.dao.cliente.CreditoDao;
 import protese.dao.cliente.EnderecoDao;
 import protese.model.cliente.Cliente;
 import protese.model.cliente.ClienteContato;
 import protese.model.cliente.ClienteEndereco;
 import protese.model.cliente.Contato;
-import protese.model.cliente.Credito;
 import protese.model.cliente.Endereco;
-import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -31,12 +25,10 @@ public class FrmCliente extends javax.swing.JDialog {
     private ClienteContatoDao clienteContatoDao = ClienteContatoDao.getInstance();
     private EnderecoDao enderecoDao = EnderecoDao.getInstance();
     private ClienteEnderecoDao clienteEnderecoDao = ClienteEnderecoDao.getInstance();
-    private CreditoDao creditoDao = CreditoDao.getInstance();
 
     private Cliente cliente = new Cliente();
     private ClienteEndereco clienteEndereco = new ClienteEndereco();
 
-    private Utilidade utilidade = Utilidade.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
 
     private FrmCliente(java.awt.Frame parent, boolean modal) {
@@ -49,11 +41,8 @@ public class FrmCliente extends javax.swing.JDialog {
         initComponents();
 
         this.cliente = cliente;
-        comboDataDeCredito.setDate(utilidade.asDate(LocalDate.now().minusDays(1)));
-        comboDataAteCredito.setDate(utilidade.asDate(LocalDate.now()));
         
         tblContatos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
-        tblCredito.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
 
         for (ClienteEndereco clienteEndereco : this.cliente.getClienteEnderecoList()) {
             this.clienteEndereco = clienteEndereco;
@@ -64,25 +53,20 @@ public class FrmCliente extends javax.swing.JDialog {
         preencheCliente();
         preencheEndereco();
         preencheContatos();
-
-        if (this.cliente.getId() != null && this.cliente.getId() > 0) {
-            preencheCredito(creditoDao.retornaTodosPorCliente(this.cliente));
-        }
     }
 
     private void liberaAbas() {
         if (cliente.getId() != null && cliente.getId() > 0) {
             tabbedPaneCliente.setEnabledAt(1, true);
             tabbedPaneCliente.setEnabledAt(2, true);
-            tabbedPaneCliente.setEnabledAt(3, true);
         } else {
             tabbedPaneCliente.setEnabledAt(1, false);
             tabbedPaneCliente.setEnabledAt(2, false);
-            tabbedPaneCliente.setEnabledAt(3, false);
         }
     }
 
     private void preencheCliente() {
+        txtCodigoProprio.setText(cliente.getCodigoProprio());
         txtNome.setText(cliente.getNome());
         txtRg.setText(cliente.getRg());
         txtDocumento.setText(cliente.getDocumento());
@@ -116,29 +100,6 @@ public class FrmCliente extends javax.swing.JDialog {
                 clienteContato.getIdcontato().getDdd(),
                 clienteContato.getIdcontato().getNumero()
             });
-        }
-    }
-
-    private void preencheCredito(List<Credito> creditoList) {
-        modelo = (DefaultTableModel) tblCredito.getModel();
-        modelo.setRowCount(0);
-
-        for (Credito credito : creditoList) {
-            modelo.addRow(new Object[]{
-                credito.getId(),
-                credito.getDescricao(),
-                utilidade.sdfTimeStamp(credito.getData()),
-                credito.getTipo(),
-                "R$ " + utilidade.decimalFormat(credito.getValor())
-            });
-        }
-
-        atualizaCredito();
-    }
-
-    private void atualizaCredito() {
-        if (cliente.getId() != null && cliente.getId() > 0) {
-            lblValorCreditoCliente.setText("R$ " + utilidade.decimalFormat(cliente.getSaldoAtual()));
         }
     }
 
@@ -191,19 +152,6 @@ public class FrmCliente extends javax.swing.JDialog {
         txtNumeroContato = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         btnSalvarContato = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblCredito = new javax.swing.JTable();
-        jLabel17 = new javax.swing.JLabel();
-        comboFiltroCredito = new javax.swing.JComboBox<>();
-        jLabel18 = new javax.swing.JLabel();
-        comboDataAteCredito = new com.toedter.calendar.JDateChooser();
-        comboDataDeCredito = new com.toedter.calendar.JDateChooser();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        btnPesquisarCredito = new javax.swing.JButton();
-        lblValorCreditoCliente = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cliente");
@@ -459,94 +407,6 @@ public class FrmCliente extends javax.swing.JDialog {
 
         tabbedPaneCliente.addTab("Contatos", jPanel4);
 
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel5.setLayout(null);
-
-        tblCredito.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        tblCredito.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Serviço", "Data", "Tipo", "Valor"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblCredito.setRowHeight(35);
-        tblCredito.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(tblCredito);
-        if (tblCredito.getColumnModel().getColumnCount() > 0) {
-            tblCredito.getColumnModel().getColumn(0).setMinWidth(0);
-            tblCredito.getColumnModel().getColumn(0).setPreferredWidth(0);
-            tblCredito.getColumnModel().getColumn(0).setMaxWidth(0);
-        }
-
-        jPanel5.add(jScrollPane2);
-        jScrollPane2.setBounds(10, 110, 800, 360);
-
-        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel17.setText("Até");
-        jPanel5.add(jLabel17);
-        jLabel17.setBounds(490, 40, 210, 20);
-
-        comboFiltroCredito.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        comboFiltroCredito.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Somente entrada", "Somente saida" }));
-        jPanel5.add(comboFiltroCredito);
-        comboFiltroCredito.setBounds(10, 60, 210, 40);
-
-        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel18.setText("Listagem das movimentações de entrada e saida de crédito");
-        jPanel5.add(jLabel18);
-        jLabel18.setBounds(10, 10, 560, 20);
-
-        comboDataAteCredito.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jPanel5.add(comboDataAteCredito);
-        comboDataAteCredito.setBounds(490, 60, 250, 40);
-
-        comboDataDeCredito.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jPanel5.add(comboDataDeCredito);
-        comboDataDeCredito.setBounds(230, 60, 250, 40);
-
-        jLabel19.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel19.setText("Saldo atual");
-        jPanel5.add(jLabel19);
-        jLabel19.setBounds(270, 500, 100, 20);
-
-        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel20.setText("De");
-        jPanel5.add(jLabel20);
-        jLabel20.setBounds(230, 40, 210, 20);
-
-        btnPesquisarCredito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
-        btnPesquisarCredito.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPesquisarCreditoActionPerformed(evt);
-            }
-        });
-        jPanel5.add(btnPesquisarCredito);
-        btnPesquisarCredito.setBounds(750, 40, 60, 60);
-
-        lblValorCreditoCliente.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        lblValorCreditoCliente.setForeground(new java.awt.Color(0, 153, 51));
-        lblValorCreditoCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblValorCreditoCliente.setText("R$ 0,00");
-        jPanel5.add(lblValorCreditoCliente);
-        lblValorCreditoCliente.setBounds(370, 500, 100, 20);
-
-        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel21.setText("Pesquisar por");
-        jPanel5.add(jLabel21);
-        jLabel21.setBounds(10, 40, 210, 20);
-
-        tabbedPaneCliente.addTab("Crédito", jPanel5);
-
         jPanel1.add(tabbedPaneCliente);
         tabbedPaneCliente.setBounds(10, 10, 830, 570);
 
@@ -568,20 +428,57 @@ public class FrmCliente extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
 
-    private void btnSalvarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarClienteActionPerformed
-        cliente.setNome(txtNome.getText());
-        cliente.setRg(txtRg.getText());
-        cliente.setDocumento(txtDocumento.getText());
-        cliente.setEmail(txtEmail.getText());
+    private void btnSalvarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarContatoActionPerformed
+        Contato contato = new Contato();
 
-        cliente = clienteDao.salvar(cliente);
+        if (!txtNumeroContato.getText().trim().isEmpty()) {
+            contato.setDdi(txtDdi.getText());
+            contato.setDdd(txtDdd.getText());
+            contato.setNumero(txtNumeroContato.getText());
+            contato = contatoDao.salvar(contato);
 
-        if (cliente.getId() != null && cliente.getId() > 0) {
-            JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+            ClienteContato clienteContato = new ClienteContato();
+            clienteContato.setIdcliente(cliente);
+            clienteContato.setIdcontato(contato);
+            clienteContato = clienteContatoDao.salvar(clienteContato);
 
-            liberaAbas();
+            if (clienteContato.getId() != null && clienteContato.getId() > 0) {
+                JOptionPane.showMessageDialog(this, "Contato salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+
+                preencheContatos();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Informe o número do contato para continuar!", "Contato", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_btnSalvarClienteActionPerformed
+    }//GEN-LAST:event_btnSalvarContatoActionPerformed
+
+    private void btnExcluirContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirContatoActionPerformed
+        ClienteContato clienteContato;
+        int[] rows = tblContatos.getSelectedRows();
+
+        if (rows.length > 0) {
+            if (JOptionPane.showConfirmDialog(
+                this,
+                "Deseja realmente excluir estes contatos?",
+                "Contatos",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+
+            try {
+                for (int i = 0; i < rows.length; i++) {
+                    clienteContato = clienteContatoDao.consultarId(ClienteContato.class, Long.parseLong(tblContatos.getValueAt(rows[i], 0).toString()));
+
+                    clienteContatoDao.deletar(clienteContato);
+                }
+
+                JOptionPane.showMessageDialog(this, "Contatos excluidos com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+                preencheContatos();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        }
+    }//GEN-LAST:event_btnExcluirContatoActionPerformed
 
     private void btnSalvarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarEnderecoActionPerformed
         Endereco endereco = new Endereco();
@@ -610,88 +507,21 @@ public class FrmCliente extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnSalvarEnderecoActionPerformed
 
-    private void btnExcluirContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirContatoActionPerformed
-        ClienteContato clienteContato;
-        int[] rows = tblContatos.getSelectedRows();
+    private void btnSalvarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarClienteActionPerformed
+        cliente.setNome(txtNome.getText());
+        cliente.setRg(txtRg.getText());
+        cliente.setDocumento(txtDocumento.getText());
+        cliente.setEmail(txtEmail.getText());
+        cliente.setCodigoProprio(txtCodigoProprio.getText());
 
-        if (rows.length > 0) {
-            if (JOptionPane.showConfirmDialog(
-                    this,
-                    "Deseja realmente excluir estes contatos?",
-                    "Contatos",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+        cliente = clienteDao.salvar(cliente);
 
-                try {
-                    for (int i = 0; i < rows.length; i++) {
-                        clienteContato = clienteContatoDao.consultarId(ClienteContato.class, Long.parseLong(tblContatos.getValueAt(rows[i], 0).toString()));
+        if (cliente.getId() != null && cliente.getId() > 0) {
+            JOptionPane.showMessageDialog(this, "Cliente salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
 
-                        clienteContatoDao.deletar(clienteContato);
-                    }
-
-                    JOptionPane.showMessageDialog(this, "Contatos excluidos com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
-                    preencheContatos();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            liberaAbas();
         }
-    }//GEN-LAST:event_btnExcluirContatoActionPerformed
-
-    private void btnSalvarContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarContatoActionPerformed
-        Contato contato = new Contato();
-
-        if (!txtNumeroContato.getText().trim().isEmpty()) {
-            contato.setDdi(txtDdi.getText());
-            contato.setDdd(txtDdd.getText());
-            contato.setNumero(txtNumeroContato.getText());
-            contato = contatoDao.salvar(contato);
-
-            ClienteContato clienteContato = new ClienteContato();
-            clienteContato.setIdcliente(cliente);
-            clienteContato.setIdcontato(contato);
-            clienteContato = clienteContatoDao.salvar(clienteContato);
-
-            if (clienteContato.getId() != null && clienteContato.getId() > 0) {
-                JOptionPane.showMessageDialog(this, "Contato salvo com sucesso!", "Cliente", JOptionPane.INFORMATION_MESSAGE);
-
-                preencheContatos();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Informe o número do contato para continuar!", "Contato", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_btnSalvarContatoActionPerformed
-
-    private void btnPesquisarCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarCreditoActionPerformed
-        switch (comboFiltroCredito.getSelectedIndex()) {
-            case 0:
-                preencheCredito(creditoDao.retornaTodosPorCliente(
-                        cliente,
-                        0,
-                        utilidade.asLocalDate(comboDataDeCredito.getDate()).atTime(LocalTime.of(0, 0, 0)),
-                        utilidade.asLocalDate(comboDataAteCredito.getDate()).atTime(LocalTime.of(23, 59, 59))));
-                break;
-            case 1:
-                //Entrada
-                preencheCredito(creditoDao.retornaTodosPorCliente(
-                        cliente,
-                        1,
-                        utilidade.asLocalDate(comboDataDeCredito.getDate()).atTime(LocalTime.of(0, 0, 0)),
-                        utilidade.asLocalDate(comboDataAteCredito.getDate()).atTime(LocalTime.of(23, 59, 59))));
-                break;
-            case 2:
-                preencheCredito(creditoDao.retornaTodosPorCliente(
-                        cliente,
-                        2,
-                        utilidade.asLocalDate(comboDataDeCredito.getDate()).atTime(LocalTime.of(0, 0, 0)),
-                        utilidade.asLocalDate(comboDataAteCredito.getDate()).atTime(LocalTime.of(23, 59, 59))));
-                //Saida
-                break;
-            default:
-                preencheCredito(creditoDao.retornaTodosPorCliente(cliente));
-                break;
-        }
-    }//GEN-LAST:event_btnPesquisarCreditoActionPerformed
+    }//GEN-LAST:event_btnSalvarClienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -739,14 +569,10 @@ public class FrmCliente extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExcluirContato;
     private javax.swing.JButton btnFechar;
-    private javax.swing.JButton btnPesquisarCredito;
     private javax.swing.JButton btnSalvarCliente;
     private javax.swing.JButton btnSalvarContato;
     private javax.swing.JButton btnSalvarEndereco;
-    private com.toedter.calendar.JDateChooser comboDataAteCredito;
-    private com.toedter.calendar.JDateChooser comboDataDeCredito;
     private javax.swing.JComboBox<String> comboEstado;
-    private javax.swing.JComboBox<String> comboFiltroCredito;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -755,12 +581,7 @@ public class FrmCliente extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -773,14 +594,10 @@ public class FrmCliente extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel lblValorCreditoCliente;
     private javax.swing.JTabbedPane tabbedPaneCliente;
     private javax.swing.JTable tblContatos;
-    private javax.swing.JTable tblCredito;
     private javax.swing.JTextField txtBairro;
     private javax.swing.JTextField txtCep;
     private javax.swing.JTextField txtCidade;

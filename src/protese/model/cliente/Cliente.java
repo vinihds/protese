@@ -21,9 +21,12 @@ import javax.xml.bind.annotation.XmlTransient;
 import protese.dao.cliente.ClienteContatoDao;
 import protese.dao.cliente.ClienteCreditoEntradaDao;
 import protese.dao.cliente.ClienteCreditoSaidaDao;
+import protese.dao.cliente.ClienteDebitoDao;
 import protese.dao.cliente.ClienteEnderecoDao;
 import protese.dao.servico.ServicoDao;
+import protese.dao.servico.ServicoDebitoDao;
 import protese.jpa.interfaces.Entidade;
+import protese.model.servico.ServicoDebito;
 
 /**
  *
@@ -239,6 +242,23 @@ public class Cliente implements Serializable, Entidade {
         }
 
         return totalEntrada - totalSaida;
+    }
+    
+    public double getDebitoPendente() {
+        ServicoDebitoDao servicoDebitoDao = ServicoDebitoDao.getInstance();
+        ClienteDebitoDao clienteDebitoDao = ClienteDebitoDao.getInstance();
+        
+        double total = 0;
+        
+        for (ClienteDebito debito : clienteDebitoDao.retornaTodosNaoUtilizadosPorCliente(this)) {
+            total += debito.getValorDebito();
+        }
+
+        for (ServicoDebito servicoDebito : servicoDebitoDao.retornaTodosAtivosPorCliente(this)) {
+            total += servicoDebito.getIdclienteDebito().getValorDebito();
+        }
+        
+        return total;
     }
 
     @XmlTransient

@@ -30,7 +30,7 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
         modelo.setRowCount(0);
 
         for (Cliente cliente : clienteList) {
-            modelo.addRow(new Object[]{cliente.getId(), cliente.getNome(), cliente.getDocumento()});
+            modelo.addRow(new Object[]{cliente.getId(), cliente.getCodigoProprio(), cliente.getNome(), cliente.getDocumento()});
         }
     }
 

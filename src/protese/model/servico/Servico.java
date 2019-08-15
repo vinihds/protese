@@ -20,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import protese.dao.servico.ServicoCreditoDao;
+import protese.dao.servico.ServicoDebitoDao;
 import protese.dao.servico.ServicoDetalheDao;
 import protese.dao.servico.ServicoPagamentoDao;
 import protese.jpa.interfaces.Entidade;
@@ -173,13 +175,33 @@ public class Servico implements Serializable, Entidade {
     public void setServicoDetalheList(List<ServicoDetalhe> servicoDetalheList) {
         this.servicoDetalheList = servicoDetalheList;
     }
-
-    public double getValorTotalServico() {
+    
+    public double getValorTotalProdutos() {
         double valorTotal = 0;
 
         for (ServicoDetalhe detalhe : getServicoDetalheList()) {
             valorTotal += detalhe.getValorTotal();
         }
+        
+        return valorTotal;
+    }
+    
+    public double getValorTotalDebitos() {
+        double valorTotal = 0;
+
+        for (ServicoDebito debito : getServicoDebitoList()) {
+            valorTotal += debito.getIdclienteDebito().getValorDebito();
+        }
+        
+        return valorTotal;
+    }
+
+    public double getValorTotalServico() {
+        double valorTotal = 0;
+
+        valorTotal += getValorTotalProdutos();
+        
+        valorTotal += getValorTotalDebitos();
 
         return valorTotal;
     }
@@ -210,6 +232,14 @@ public class Servico implements Serializable, Entidade {
 
     @XmlTransient
     public List<ServicoCredito> getServicoCreditoList() {
+        ServicoCreditoDao servicoCreditoDao = ServicoCreditoDao.getInstance();
+        
+        servicoCreditoList = new ArrayList();
+        
+        if (this.idservico != null && this.idservico > 0) {
+            servicoCreditoList = servicoCreditoDao.retornaTodosPorServico(this);
+        }
+        
         return servicoCreditoList;
     }
 
@@ -219,6 +249,14 @@ public class Servico implements Serializable, Entidade {
 
     @XmlTransient
     public List<ServicoDebito> getServicoDebitoList() {
+        ServicoDebitoDao servicoDebitoDao = ServicoDebitoDao.getInstance();
+        
+        servicoDebitoList = new ArrayList();
+        
+        if (this.idservico != null && this.idservico > 0) {
+            servicoDebitoList = servicoDebitoDao.retornaTodosPorServico(this);
+        }
+        
         return servicoDebitoList;
     }
 

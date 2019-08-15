@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
+import protese.dao.servico.ServicoCreditoDao;
 import protese.jpa.interfaces.Dao;
 import protese.model.cliente.Cliente;
 import protese.model.cliente.ClienteCreditoEntrada;
@@ -18,7 +19,8 @@ public class ClienteCreditoEntradaDao extends Dao<ClienteCreditoEntrada> {
 
     private static ClienteCreditoEntradaDao unique = null;
 
-    Utilidade utilidade = Utilidade.getInstance();
+    private Utilidade utilidade = Utilidade.getInstance();
+    private ServicoCreditoDao servicoCreditoDao = ServicoCreditoDao.getInstance();
 
     private ClienteCreditoEntradaDao() {
     }
@@ -52,10 +54,9 @@ public class ClienteCreditoEntradaDao extends Dao<ClienteCreditoEntrada> {
 
         Query query = createQuery("SELECT creditoEntrada FROM ClienteCreditoEntrada AS creditoEntrada "
                 + " INNER JOIN creditoEntrada.idcliente AS cliente "
-                + " INNER JOIN creditoEntrada.idservico AS servico "
                 + " WHERE creditoEntrada.excluido = false "
-                + " AND servico.excluido = false "
-                + " AND creditoEntrada.idcliente = :cliente");
+                + " AND creditoEntrada.idcliente = :cliente "
+                + " ORDER BY creditoEntrada.data DESC");
         query.setParameter("cliente", cliente);
 
         resultset = query.getResultList();
@@ -63,12 +64,24 @@ public class ClienteCreditoEntradaDao extends Dao<ClienteCreditoEntrada> {
         return resultset;
     }
 
-    public ClienteCreditoEntrada salvarClienteCreditoEntrada(Cliente cliente, Servico servico, double valorCredito) {
+    public ClienteCreditoEntrada salvarClienteCreditoEntrada(Cliente cliente, Servico servico, double valorCredito, LocalDateTime dataCredito) {
+        ClienteCreditoEntrada creditoEntrada = salvarClienteCreditoEntrada(cliente,
+                "Entrada de crédito - " + utilidade.mesAno(servico.getDataReferente()).toUpperCase(),
+                valorCredito,
+                dataCredito);
+
+        servicoCreditoDao.salvarServicoCredito(creditoEntrada, servico);
+
+        return creditoEntrada;
+    }
+
+    public ClienteCreditoEntrada salvarClienteCreditoEntrada(Cliente cliente, String descricao, double valorCredito, LocalDateTime dataCredito) {
         ClienteCreditoEntrada creditoEntrada = new ClienteCreditoEntrada();
 
         creditoEntrada.setIdcliente(cliente);
-        creditoEntrada.setDescricao("Entrada de crédito referente ao serviço de " + utilidade.mesAno(servico.getDataReferente()).toUpperCase());
+        creditoEntrada.setDescricao(descricao);
         creditoEntrada.setValorCredito(valorCredito);
+        creditoEntrada.setData(dataCredito);
 
         return salvar(creditoEntrada);
     }
@@ -78,11 +91,10 @@ public class ClienteCreditoEntradaDao extends Dao<ClienteCreditoEntrada> {
 
         Query query = createQuery("SELECT creditoEntrada FROM ClienteCreditoEntrada AS creditoEntrada "
                 + " INNER JOIN creditoEntrada.idcliente AS cliente "
-                + " INNER JOIN creditoEntrada.idservico AS servico "
                 + " WHERE creditoEntrada.excluido = false "
-                + " AND servico.excluido = false "
-                + " AND servico.dataFinalizacao BETWEEN :dataInicial AND :dataFinal "
-                + " AND creditoEntrada.idcliente = :cliente");
+                + " AND creditoEntrada.data BETWEEN :dataInicial AND :dataFinal "
+                + " AND creditoEntrada.idcliente = :cliente "
+                + " ORDER BY creditoEntrada.data DESC");
         query.setParameter("cliente", cliente);
         query.setParameter("dataInicial", dataInicial);
         query.setParameter("dataFinal", dataFinal);

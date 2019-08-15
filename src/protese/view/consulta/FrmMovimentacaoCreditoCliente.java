@@ -19,7 +19,7 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
     private CreditoDao creditoDao = CreditoDao.getInstance();
     private Utilidade utilidade = Utilidade.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
-    
+
     private Cliente cliente = new Cliente();
 
     public FrmMovimentacaoCreditoCliente() {
@@ -33,18 +33,20 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
         modelo = (DefaultTableModel) tblCliente.getModel();
         modelo.setRowCount(0);
 
-        double saldoAtual = cliente.getSaldoAtual();
-        lblValorCredito.setText("R$ " + utilidade.decimalFormat(saldoAtual));
-        txtNomeCliente.setText(cliente.getNome());
-        
-        for (Credito credito : creditoDao.retornaTodosPorCliente(cliente)) {
-            modelo.addRow(new Object[]{
-                credito.getId(),
-                credito.getDescricao(),
-                credito.getData(),
-                credito.getTipo(),
-                credito.getValor()
-            });
+        if (cliente != null && cliente.getId() != null && cliente.getId() > 0) {
+            double saldoAtual = cliente.getSaldoAtual();
+            lblValorCredito.setText("R$ " + utilidade.decimalFormat(saldoAtual));
+            txtNomeCliente.setText(cliente.getNome());
+
+            for (Credito credito : creditoDao.retornaTodosPorCliente(cliente)) {
+                modelo.addRow(new Object[]{
+                    credito.getId(),
+                    credito.getDescricao(),
+                    utilidade.sdfTimeStamp(credito.getData()),
+                    credito.getTipo().toUpperCase(),
+                    "R$ " + utilidade.decimalFormat(credito.getValor())
+                });
+            }
         }
     }
 
@@ -62,6 +64,7 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
         lblValorCredito = new javax.swing.JLabel();
         txtNomeCliente = new javax.swing.JTextField();
         btnPesquisar = new javax.swing.JButton();
+        btnAdicionarCredito = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Movimentações de créditos");
@@ -72,7 +75,7 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Filtre pelo cliente que deseja");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(10, 10, 680, 20);
+        jLabel1.setBounds(10, 10, 590, 20);
 
         tblCliente.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblCliente.setModel(new javax.swing.table.DefaultTableModel(
@@ -98,10 +101,14 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
             tblCliente.getColumnModel().getColumn(0).setMinWidth(0);
             tblCliente.getColumnModel().getColumn(0).setPreferredWidth(0);
             tblCliente.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblCliente.getColumnModel().getColumn(1).setPreferredWidth(450);
+            tblCliente.getColumnModel().getColumn(2).setPreferredWidth(150);
+            tblCliente.getColumnModel().getColumn(3).setPreferredWidth(250);
+            tblCliente.getColumnModel().getColumn(4).setPreferredWidth(150);
         }
 
         jPanel1.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 110, 1040, 510);
+        jScrollPane1.setBounds(10, 110, 1040, 500);
 
         btnFechar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnFechar.setText("Fechar");
@@ -111,7 +118,7 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnFechar);
-        btnFechar.setBounds(910, 630, 140, 40);
+        btnFechar.setBounds(910, 620, 140, 50);
 
         painelCredito.setBackground(new java.awt.Color(0, 153, 51));
         painelCredito.setLayout(null);
@@ -144,6 +151,17 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
         jPanel1.add(btnPesquisar);
         btnPesquisar.setBounds(600, 10, 70, 70);
 
+        btnAdicionarCredito.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btnAdicionarCredito.setForeground(new java.awt.Color(0, 153, 51));
+        btnAdicionarCredito.setText("Adicionar crédito!");
+        btnAdicionarCredito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarCreditoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnAdicionarCredito);
+        btnAdicionarCredito.setBounds(10, 620, 240, 50);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -171,6 +189,16 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
 
         preencheTabela();
     }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void btnAdicionarCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCreditoActionPerformed
+        if (cliente != null && cliente.getId() != null && cliente.getId() > 0) {
+            FrmAdicionarCredito frm = new FrmAdicionarCredito(this, true, cliente);
+            frm.setLocationRelativeTo(null);
+            frm.setVisible(true);
+
+            preencheTabela();
+        }
+    }//GEN-LAST:event_btnAdicionarCreditoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,6 +237,7 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdicionarCredito;
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JLabel jLabel1;

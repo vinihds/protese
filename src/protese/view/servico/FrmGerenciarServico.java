@@ -1,10 +1,8 @@
 package protese.view.servico;
 
 import java.awt.Font;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +11,7 @@ import protese.dao.servico.ServicoDao;
 import protese.model.cliente.Cliente;
 import protese.model.servico.Servico;
 import protese.util.utilidade.Utilidade;
+import protese.view.cliente.FrmPesquisarCliente;
 
 /**
  *
@@ -26,23 +25,21 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     private Utilidade utilidade = Utilidade.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
     private List<Cliente> clienteList = new ArrayList();
+    
+    private Cliente cliente;
 
     public FrmGerenciarServico() {
         initComponents();
 
         clienteList = clienteDao.retornaTodos();
 
-        comboCliente.removeAllItems();
-        comboCliente.addItem("<Todos>");
-        for (Cliente cliente : clienteList) {
-            comboCliente.addItem(cliente.getNome());
-        }
-
+        txtNomeCliente.setEditable(false);
         preencheMeses();
         preencheAnos();
 
         tblServicos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
-        preencherTabela(servicoDao.retornaTodos());
+        
+        btnPesquisarActionPerformed(null);
     }
 
     private void preencheMeses() {
@@ -108,7 +105,6 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         btnPesquisar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        comboCliente = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         comboReferenteAnoInicial = new javax.swing.JComboBox<>();
         comboReferenteAnoFinal = new javax.swing.JComboBox<>();
@@ -116,6 +112,8 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         comboReferenteMesInicial = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        txtNomeCliente = new javax.swing.JTextField();
+        btnPesquisarCliente = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gerenciar serviços");
@@ -126,7 +124,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Data inicial");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(270, 80, 140, 20);
+        jLabel1.setBounds(320, 90, 140, 20);
 
         tblServicos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tblServicos.setModel(new javax.swing.table.DefaultTableModel(
@@ -134,7 +132,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Titulo", "Cliente", "Data do serviço", "Finalização", "Valor total"
+                "Nota", "Titulo", "Cliente", "Data do serviço", "Finalização", "Valor total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -149,13 +147,16 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         tblServicos.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblServicos);
         if (tblServicos.getColumnModel().getColumnCount() > 0) {
-            tblServicos.getColumnModel().getColumn(0).setMinWidth(0);
-            tblServicos.getColumnModel().getColumn(0).setPreferredWidth(0);
-            tblServicos.getColumnModel().getColumn(0).setMaxWidth(0);
+            tblServicos.getColumnModel().getColumn(0).setPreferredWidth(50);
+            tblServicos.getColumnModel().getColumn(1).setPreferredWidth(200);
+            tblServicos.getColumnModel().getColumn(2).setPreferredWidth(250);
+            tblServicos.getColumnModel().getColumn(3).setPreferredWidth(100);
+            tblServicos.getColumnModel().getColumn(4).setPreferredWidth(100);
+            tblServicos.getColumnModel().getColumn(5).setPreferredWidth(80);
         }
 
         jPanel1.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 160, 940, 490);
+        jScrollPane1.setBounds(10, 170, 1000, 480);
 
         btnNovo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnNovo.setText("Novo");
@@ -195,17 +196,17 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnFechar);
-        btnFechar.setBounds(810, 660, 140, 40);
+        btnFechar.setBounds(870, 660, 140, 40);
 
         comboFiltro.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         comboFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>", "Em aberto", "Finalizados" }));
         jPanel1.add(comboFiltro);
-        comboFiltro.setBounds(10, 100, 240, 40);
+        comboFiltro.setBounds(10, 110, 280, 40);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Selecione o cliente");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(10, 10, 390, 20);
+        jLabel2.setBounds(10, 20, 390, 20);
 
         txtPesquisa.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtPesquisa.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -214,7 +215,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
             }
         });
         jPanel1.add(txtPesquisa);
-        txtPesquisa.setBounds(440, 30, 410, 40);
+        txtPesquisa.setBounds(470, 40, 430, 40);
 
         btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
@@ -223,63 +224,71 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnPesquisar);
-        btnPesquisar.setBounds(860, 10, 90, 130);
+        btnPesquisar.setBounds(920, 20, 90, 130);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setText("Filtrar por");
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(10, 80, 140, 20);
+        jLabel3.setBounds(10, 90, 140, 20);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Data final");
         jPanel1.add(jLabel4);
-        jLabel4.setBounds(570, 80, 140, 20);
-
-        comboCliente.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        comboCliente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Todos>" }));
-        jPanel1.add(comboCliente);
-        comboCliente.setBounds(10, 30, 410, 40);
+        jLabel4.setBounds(620, 90, 140, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel5.setText("Pesquisar por título ou descrição");
         jPanel1.add(jLabel5);
-        jLabel5.setBounds(440, 10, 390, 20);
+        jLabel5.setBounds(470, 20, 390, 20);
 
         comboReferenteAnoInicial.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jPanel1.add(comboReferenteAnoInicial);
-        comboReferenteAnoInicial.setBounds(420, 100, 130, 40);
+        comboReferenteAnoInicial.setBounds(470, 110, 130, 40);
 
         comboReferenteAnoFinal.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jPanel1.add(comboReferenteAnoFinal);
-        comboReferenteAnoFinal.setBounds(720, 100, 130, 40);
+        comboReferenteAnoFinal.setBounds(770, 110, 130, 40);
 
         comboReferenteMesFinal.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         comboReferenteMesFinal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ" }));
         jPanel1.add(comboReferenteMesFinal);
-        comboReferenteMesFinal.setBounds(570, 100, 130, 40);
+        comboReferenteMesFinal.setBounds(620, 110, 130, 40);
 
         comboReferenteMesInicial.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         comboReferenteMesInicial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ" }));
         jPanel1.add(comboReferenteMesInicial);
-        comboReferenteMesInicial.setBounds(270, 100, 130, 40);
+        comboReferenteMesInicial.setBounds(320, 110, 130, 40);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("/");
         jPanel1.add(jLabel6);
-        jLabel6.setBounds(390, 100, 40, 40);
+        jLabel6.setBounds(440, 110, 40, 40);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("/");
         jPanel1.add(jLabel7);
-        jLabel7.setBounds(690, 100, 40, 40);
+        jLabel7.setBounds(740, 110, 40, 40);
+
+        txtNomeCliente.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jPanel1.add(txtNomeCliente);
+        txtNomeCliente.setBounds(10, 40, 380, 40);
+
+        btnPesquisarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-pesquisar-25.png"))); // NOI18N
+        btnPesquisarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarClienteActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnPesquisarCliente);
+        btnPesquisarCliente.setBounds(390, 10, 70, 70);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 964, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,6 +308,8 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
                 FrmServico frm = new FrmServico(this, true, servico);
                 frm.setLocationRelativeTo(null);
                 frm.setVisible(true);
+                
+                btnPesquisarActionPerformed(null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -340,6 +351,8 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         FrmServico frm = new FrmServico(this, true, new Servico());
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
+        
+        btnPesquisarActionPerformed(null);
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
@@ -347,13 +360,6 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        Cliente cliente = new Cliente();
-
-        int indexCliente = comboCliente.getSelectedIndex();
-        if (indexCliente > 0) {
-            cliente = clienteList.get(indexCliente - 1);
-        }
-
         int indexFiltro = comboFiltro.getSelectedIndex();
         
         int diaInicial = 1;
@@ -379,6 +385,15 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     private void txtPesquisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisaKeyReleased
         btnPesquisarActionPerformed(null);
     }//GEN-LAST:event_txtPesquisaKeyReleased
+
+    private void btnPesquisarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarClienteActionPerformed
+        FrmPesquisarCliente frm = new FrmPesquisarCliente(this, true);
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
+        
+        this.cliente = frm.getCliente();
+        txtNomeCliente.setText(cliente.getNome());
+    }//GEN-LAST:event_btnPesquisarClienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -421,7 +436,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnPesquisar;
-    private javax.swing.JComboBox<String> comboCliente;
+    private javax.swing.JButton btnPesquisarCliente;
     private javax.swing.JComboBox<String> comboFiltro;
     private javax.swing.JComboBox<String> comboReferenteAnoFinal;
     private javax.swing.JComboBox<String> comboReferenteAnoInicial;
@@ -437,6 +452,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblServicos;
+    private javax.swing.JTextField txtNomeCliente;
     private javax.swing.JTextField txtPesquisa;
     // End of variables declaration//GEN-END:variables
 }

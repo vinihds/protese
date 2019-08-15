@@ -2,7 +2,7 @@ package protese.model.cliente;
 
 import protese.model.servico.ServicoDebito;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -18,8 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import protese.jpa.interfaces.Entidade;
@@ -47,8 +45,7 @@ public class ClienteDebito implements Serializable, Entidade {
     @Column(name = "valor_debito")
     private Double valorDebito;
     @Column(name = "data")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date data;
+    private LocalDateTime data;
     @Basic(optional = false)
     @Column(name = "excluido")
     private boolean excluido;
@@ -99,11 +96,11 @@ public class ClienteDebito implements Serializable, Entidade {
         this.valorDebito = valorDebito;
     }
 
-    public Date getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 

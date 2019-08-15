@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
 import protese.dao.cliente.ClienteCreditoEntradaDao;
+import protese.dao.cliente.ClienteDebitoDao;
 import protese.jpa.interfaces.Dao;
 import protese.model.cliente.Cliente;
 import protese.model.servico.Servico;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -18,6 +20,8 @@ public class ServicoDao extends Dao<Servico> {
     private static ServicoDao unique = null;
 
     private ClienteCreditoEntradaDao creditoEntradaDao = ClienteCreditoEntradaDao.getInstance();
+    private ClienteDebitoDao clienteDebitoDao = ClienteDebitoDao.getInstance();
+    private Utilidade utilidade = Utilidade.getInstance();
 
     private ServicoDao() {
     }
@@ -105,16 +109,28 @@ public class ServicoDao extends Dao<Servico> {
     }
 
     public Servico finalizarServico(Servico servico) {
-        double valorCredito = servico.getValorTotalServico() - servico.getValorTotalPago();
+        double totalServico = servico.getValorTotalServico();
+        double totalPago = servico.getValorTotalPago();
+        double valorCredito = 0;
+        double valorDebito = 0;
 
-        if (valorCredito < 0) {
-            //Tornando o crédito positivo
-            valorCredito = valorCredito * -1;
+        if (totalPago > totalServico) {
+            valorCredito = totalPago - totalServico;
+        } else if (totalServico > totalPago) {
+            valorDebito = totalServico - totalPago;
         }
 
         if (valorCredito > 0) {
             //Deve adicionar crédito
-            creditoEntradaDao.salvarClienteCreditoEntrada(servico.getIdcliente(), servico, valorCredito);
+            creditoEntradaDao.salvarClienteCreditoEntrada(servico.getIdcliente(), servico, valorCredito, LocalDateTime.now());
+        }
+
+        if (valorDebito > 0) {
+            //Deve adicionar débito do cliente
+            clienteDebitoDao.geraDebitoCliente(servico.getIdcliente(),
+                    valorDebito,
+                    "Débito pendente - " + utilidade.mesAno(servico.getDataReferente()).toUpperCase(),
+                    LocalDateTime.now());
         }
 
         servico.setDataFinalizacao(LocalDateTime.now());
@@ -165,7 +181,7 @@ public class ServicoDao extends Dao<Servico> {
                 + "     OR LOWER(servico.descricao) LIKE LOWER(:pesquisa)) "
                 + " AND servico.dataReferente BETWEEN :dataInicial AND :dataFinal ";
 
-        if (cliente.getId() != null && cliente.getId() > 0) {
+        if (cliente != null && cliente.getId() != null && cliente.getId() > 0) {
             sql += " AND servico.idcliente = :cliente ";
         }
 
@@ -182,7 +198,7 @@ public class ServicoDao extends Dao<Servico> {
         Query query = createQuery(sql);
         query.setParameter("pesquisa", "%" + pesquisa + "%");
 
-        if (cliente.getId() != null && cliente.getId() > 0) {
+        if (cliente != null && cliente.getId() != null && cliente.getId() > 0) {
             query.setParameter("cliente", cliente);
         }
 

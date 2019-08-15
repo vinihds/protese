@@ -49,7 +49,7 @@ public class CreditoDao extends Dao<Credito> {
         Credito credito = new Credito();
 
         credito.setIdcredito(creditoSaida.getId());
-        credito.setDescricao("Utilização de crédito no serviço de " + utilidade.mesAno(creditoSaida.getIdservicoPagamento().getIdservico().getDataReferente()).toUpperCase());
+        credito.setDescricao("Utilização de crédito - " + utilidade.mesAno(creditoSaida.getIdservicoPagamento().getIdservico().getDataReferente()).toUpperCase());
         credito.setTipo("Saida");
         credito.setData(creditoSaida.getIdservicoPagamento().getIdpagamento().getDataPagamento());
         credito.setValor(creditoSaida.getIdservicoPagamento().getIdpagamento().getValor());
@@ -68,7 +68,7 @@ public class CreditoDao extends Dao<Credito> {
             creditoList.add(preencheCredito(creditoSaida));
         }
 
-        creditoList.sort(Comparator.comparing(credito -> credito.getData()));
+        creditoList.sort(Comparator.comparing(Credito::getData).reversed());
 
         return creditoList;
     }

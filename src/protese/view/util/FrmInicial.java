@@ -4,6 +4,8 @@ import protese.view.cliente.FrmGerenciarCliente;
 import javax.swing.JFrame;
 import protese.model.servico.Servico;
 import protese.view.consulta.FrmMovimentacaoCreditoCliente;
+import protese.view.consulta.FrmMovimentacaoDebitoCliente;
+import protese.view.consulta.FrmPagamentosPorAno;
 import protese.view.produto.FrmGerenciarGrupo;
 import protese.view.produto.FrmGerenciarProduto;
 import protese.view.servico.FrmGerenciarServico;
@@ -26,12 +28,9 @@ public class FrmInicial extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuCliente = new javax.swing.JMenuItem();
@@ -42,37 +41,77 @@ public class FrmInicial extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuGerenciarServico = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuMovimentacaoCredito = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        menuMovimentacaoDebito = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        menuPagamentosPorAno = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dentista");
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setLayout(null);
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton3.setText("jButton1");
-        jPanel1.add(jButton3);
-        jButton3.setBounds(20, 20, 190, 130);
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 288, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 218, Short.MAX_VALUE)
+        );
 
-        jButton10.setText("jButton1");
-        jPanel1.add(jButton10);
-        jButton10.setBounds(20, 190, 190, 130);
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton11.setText("jButton1");
-        jPanel1.add(jButton11);
-        jButton11.setBounds(540, 20, 190, 130);
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 288, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 218, Short.MAX_VALUE)
+        );
 
-        jButton12.setText("jButton1");
-        jPanel1.add(jButton12);
-        jButton12.setBounds(280, 190, 190, 130);
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton13.setText("jButton1");
-        jPanel1.add(jButton13);
-        jButton13.setBounds(540, 190, 190, 130);
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 288, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 218, Short.MAX_VALUE)
+        );
 
-        jButton14.setText("jButton1");
-        jPanel1.add(jButton14);
-        jButton14.setBounds(280, 20, 190, 130);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(69, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(270, Short.MAX_VALUE))
+        );
 
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
@@ -135,14 +174,34 @@ public class FrmInicial extends javax.swing.JFrame {
         jMenu3.setText("Consultas");
         jMenu3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
 
-        jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jMenuItem1.setText("Movimentações de créditos");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menuMovimentacaoCredito.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        menuMovimentacaoCredito.setText("Movimentações de créditos");
+        menuMovimentacaoCredito.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                menuMovimentacaoCreditoActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem1);
+        jMenu3.add(menuMovimentacaoCredito);
+        jMenu3.add(jSeparator2);
+
+        menuMovimentacaoDebito.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        menuMovimentacaoDebito.setText("Movimentações de débitos");
+        menuMovimentacaoDebito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuMovimentacaoDebitoActionPerformed(evt);
+            }
+        });
+        jMenu3.add(menuMovimentacaoDebito);
+        jMenu3.add(jSeparator3);
+
+        menuPagamentosPorAno.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        menuPagamentosPorAno.setText("Pagamentos dos clientes por ano");
+        menuPagamentosPorAno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPagamentosPorAnoActionPerformed(evt);
+            }
+        });
+        jMenu3.add(menuPagamentosPorAno);
 
         jMenuBar1.add(jMenu3);
 
@@ -152,11 +211,11 @@ public class FrmInicial extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -192,11 +251,23 @@ public class FrmInicial extends javax.swing.JFrame {
         frm.setVisible(true);
     }//GEN-LAST:event_menuGerenciarServicoActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menuMovimentacaoCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMovimentacaoCreditoActionPerformed
         FrmMovimentacaoCreditoCliente frm = new FrmMovimentacaoCreditoCliente();
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_menuMovimentacaoCreditoActionPerformed
+
+    private void menuMovimentacaoDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMovimentacaoDebitoActionPerformed
+        FrmMovimentacaoDebitoCliente frm = new FrmMovimentacaoDebitoCliente();
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
+    }//GEN-LAST:event_menuMovimentacaoDebitoActionPerformed
+
+    private void menuPagamentosPorAnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPagamentosPorAnoActionPerformed
+        FrmPagamentosPorAno frm = new FrmPagamentosPorAno();
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
+    }//GEN-LAST:event_menuPagamentosPorAnoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -234,23 +305,24 @@ public class FrmInicial extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JMenuItem menuCliente;
     private javax.swing.JMenuItem menuGerenciarServico;
     private javax.swing.JMenuItem menuGrupo;
+    private javax.swing.JMenuItem menuMovimentacaoCredito;
+    private javax.swing.JMenuItem menuMovimentacaoDebito;
     private javax.swing.JMenuItem menuNovoServico;
+    private javax.swing.JMenuItem menuPagamentosPorAno;
     private javax.swing.JMenuItem menuProduto;
     // End of variables declaration//GEN-END:variables
 }
