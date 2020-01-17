@@ -61,25 +61,27 @@ public class ServicoPagamentoDao extends Dao<ServicoPagamento> {
     public boolean salvarNovoServicoPagamento(Servico servico, FormaPagamento formaPagamento, LocalDateTime dataPagamento, double valorPagamento, double restantePagar) {
         FormaPagamento formaPagamentoSaidaCredito = formaPagamentoDao.retornaFormaPagamentoCreditoSaida();
 
-        Pagamento pagamento = new Pagamento();
-        pagamento.setIdformaPagamento(formaPagamento);
-        pagamento.setDataLancamento(LocalDateTime.now());
-        pagamento.setDataPagamento(dataPagamento);
-        pagamento.setDataVencimento(LocalDateTime.now());
-        pagamento.setValor(valorPagamento);
-        pagamento = pagamentoDao.salvar(pagamento);
+        if (valorPagamento > 0) {
+            Pagamento pagamento = new Pagamento();
+            pagamento.setIdformaPagamento(formaPagamento);
+            pagamento.setDataLancamento(LocalDateTime.now());
+            pagamento.setDataPagamento(dataPagamento);
+            pagamento.setDataVencimento(LocalDateTime.now());
+            pagamento.setValor(valorPagamento);
+            pagamento = pagamentoDao.salvar(pagamento);
 
-        if (pagamento.getId() > 0) {
-            ServicoPagamento servicoPagamento = salvarServicoPagamento(servico, pagamento);
+            if (pagamento.getId() > 0) {
+                ServicoPagamento servicoPagamento = salvarServicoPagamento(servico, pagamento);
 
-            if (servicoPagamento.getId() > 0) {
+                if (servicoPagamento.getId() > 0) {
 
-                //Se utilizou credito, deve dar baixa para o cliente
-                if (formaPagamento.getId() == formaPagamentoSaidaCredito.getId()) {
-                    creditoSaidaDao.salvarClienteCreditoSaida(servico.getIdcliente(), servicoPagamento);
+                    //Se utilizou credito, deve dar baixa para o cliente
+                    if (formaPagamento.getId() == formaPagamentoSaidaCredito.getId()) {
+                        creditoSaidaDao.salvarClienteCreditoSaida(servico.getIdcliente(), servicoPagamento);
+                    }
+
+                    return true;
                 }
-
-                return true;
             }
         }
 

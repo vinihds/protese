@@ -75,8 +75,10 @@ public class ServicoDebitoDao extends Dao<ServicoDebito> {
         return salvar(servicoDebito);
     }
     
-    public void verificaAgregarDebitos(Servico servico) {
-        for (ClienteDebito debito : clienteDebitoDao.retornaTodosNaoUtilizadosPorCliente(servico.getIdcliente())) {
+    public boolean verificaAgregarDebitos(Servico servico) {
+        List<ClienteDebito> clienteDebitoList = clienteDebitoDao.retornaTodosNaoUtilizadosPorCliente(servico.getIdcliente());
+        
+        for (ClienteDebito debito : clienteDebitoList) {
             ServicoDebito servicoDebito = new ServicoDebito();
             
             servicoDebito.setIdservico(servico);
@@ -84,6 +86,8 @@ public class ServicoDebitoDao extends Dao<ServicoDebito> {
             
             salvar(servicoDebito);
         }
+        
+        return !clienteDebitoList.isEmpty();
     }
 
     public List<ServicoDebito> retornaTodosPorServico(Servico servico) {

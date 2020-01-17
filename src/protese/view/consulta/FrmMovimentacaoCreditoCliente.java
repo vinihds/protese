@@ -25,7 +25,7 @@ public class FrmMovimentacaoCreditoCliente extends javax.swing.JFrame {
     public FrmMovimentacaoCreditoCliente() {
         initComponents();
 
-        tblCliente.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblCliente.getTableHeader().setFont(utilidade.FONTE);
         txtNomeCliente.setEditable(false);
     }
 

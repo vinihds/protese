@@ -62,9 +62,9 @@ public class FrmServico extends javax.swing.JDialog {
         preencheMes();
         preencheAnos();
 
-        tblPagamentos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
-        tblServicoDetalhe.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
-        tblServicoDebito.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblPagamentos.getTableHeader().setFont(utilidade.FONTE);
+        tblServicoDetalhe.getTableHeader().setFont(utilidade.FONTE);
+        tblServicoDebito.getTableHeader().setFont(utilidade.FONTE);
 
         if (this.servico.getId() != null && this.servico.getId() > 0) {
             cliente = servico.getIdcliente();
@@ -1244,13 +1244,17 @@ public class FrmServico extends javax.swing.JDialog {
             valorPagamento = saldoCliente;
         }
 
-        if (JOptionPane.showConfirmDialog(
-                this,
-                "Deseja realmente utilizar os créditos do cliente?",
-                "Produtos do serviço",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-            novoPagamento(formaPagamentoDao.retornaFormaPagamentoCreditoSaida(), valorPagamento, utilidade.asLocalDateTime(comboDataPagamento.getDate()), true);
+        if (valorPagamento > 0) {
+            if (JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja realmente utilizar os créditos do cliente?",
+                    "Produtos do serviço",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                novoPagamento(formaPagamentoDao.retornaFormaPagamentoCreditoSaida(), valorPagamento, utilidade.asLocalDateTime(comboDataPagamento.getDate()), true);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Informe um valor de crédito válido para continuar!", "Pagamento do serviço", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnUtilizarCreditosActionPerformed
 
@@ -1260,10 +1264,13 @@ public class FrmServico extends javax.swing.JDialog {
                 "Atenção!",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-            //Agregando débitos
-            servicoDebitoDao.verificaAgregarDebitos(servico);
-
-            JOptionPane.showMessageDialog(this, "Débitos pendentes agregados com sucesso!", "Atenção!", JOptionPane.INFORMATION_MESSAGE);
+            
+            //Verificando e agregando débitos
+            if (servicoDebitoDao.verificaAgregarDebitos(servico)) {
+                JOptionPane.showMessageDialog(this, "Débitos pendentes agregados com sucesso!", "Atenção!", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Este cliente não possui débitos a serem agregados!", "Atenção!", JOptionPane.INFORMATION_MESSAGE);
+            }
 
             preencheServico();
         }

@@ -6,6 +6,7 @@ import protese.model.servico.Servico;
 import protese.view.consulta.FrmMovimentacaoCreditoCliente;
 import protese.view.consulta.FrmMovimentacaoDebitoCliente;
 import protese.view.consulta.FrmPagamentosPorAno;
+import protese.view.consulta.FrmServicosPorCliente;
 import protese.view.produto.FrmGerenciarGrupo;
 import protese.view.produto.FrmGerenciarProduto;
 import protese.view.servico.FrmGerenciarServico;
@@ -27,6 +28,7 @@ public class FrmInicial extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -43,6 +45,10 @@ public class FrmInicial extends javax.swing.JFrame {
         menuMovimentacaoDebito = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         menuPagamentosPorAno = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        menuServicosPorCliente = new javax.swing.JMenuItem();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dentista");
@@ -147,6 +153,16 @@ public class FrmInicial extends javax.swing.JFrame {
             }
         });
         jMenu3.add(menuPagamentosPorAno);
+        jMenu3.add(jSeparator4);
+
+        menuServicosPorCliente.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        menuServicosPorCliente.setText("Serviços prestados por cliente");
+        menuServicosPorCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuServicosPorClienteActionPerformed(evt);
+            }
+        });
+        jMenu3.add(menuServicosPorCliente);
 
         jMenuBar1.add(jMenu3);
 
@@ -214,6 +230,12 @@ public class FrmInicial extends javax.swing.JFrame {
         frm.setVisible(true);
     }//GEN-LAST:event_menuPagamentosPorAnoActionPerformed
 
+    private void menuServicosPorClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuServicosPorClienteActionPerformed
+        FrmServicosPorCliente frm = new FrmServicosPorCliente();
+        frm.setLocationRelativeTo(null);
+        frm.setVisible(true);
+    }//GEN-LAST:event_menuServicosPorClienteActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -254,10 +276,12 @@ public class FrmInicial extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JMenuItem menuCliente;
     private javax.swing.JMenuItem menuGerenciarServico;
     private javax.swing.JMenuItem menuGrupo;
@@ -266,5 +290,6 @@ public class FrmInicial extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuNovoServico;
     private javax.swing.JMenuItem menuPagamentosPorAno;
     private javax.swing.JMenuItem menuProduto;
+    private javax.swing.JMenuItem menuServicosPorCliente;
     // End of variables declaration//GEN-END:variables
 }

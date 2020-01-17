@@ -1,9 +1,11 @@
 package protese.dao.servico;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
 import protese.jpa.interfaces.Dao;
+import protese.model.cliente.Cliente;
 import protese.model.servico.Servico;
 import protese.model.servico.ServicoDetalhe;
 
@@ -55,6 +57,29 @@ public class ServicoDetalheDao extends Dao<ServicoDetalhe> {
 
         resultset = query.getResultList();
 
+        return resultset;
+    }
+    
+    public List<ServicoDetalhe> retornaTodosPorClientePorPeriodo(Cliente cliente, LocalDateTime dataDe, LocalDateTime dataAte) {
+        List<ServicoDetalhe> resultset = new ArrayList();
+        
+        Query query = createQuery("SELECT detalhe FROM ServicoDetalhe AS detalhe "
+                + " INNER JOIN detalhe.idprodutoValor AS produtoValor "
+                + " INNER JOIN produtoValor.idproduto AS produto "
+                + " INNER JOIN produtoValor.idgrupo AS grupo "
+                + " INNER JOIN detalhe.idservico AS servico "
+                + " INNER JOIN servico.idcliente AS cliente "
+                + " WHERE servico.idcliente = :cliente "
+                + " AND detalhe.dataLancamento BETWEEN :dataDe AND :dataAte "
+                + " AND detalhe.excluido = false "
+                + " AND servico.excluido = false "
+                + " ORDER BY servico.dataReferente DESC, detalhe.dataLancamento DESC");
+        query.setParameter("cliente", cliente);
+        query.setParameter("dataDe", dataDe);
+        query.setParameter("dataAte", dataAte);
+        
+        resultset = query.getResultList();
+        
         return resultset;
     }
 }

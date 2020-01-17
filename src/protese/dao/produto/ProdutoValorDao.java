@@ -134,7 +134,8 @@ public class ProdutoValorDao extends Dao<ProdutoValor> {
                 + " AND (LOWER(produto.nome) LIKE LOWER(:pesquisa) "
                 + "     OR LOWER(produto.codigo) LIKE LOWER(:pesquisa) "
                 + "     OR LOWER(grupo.codigo) LIKE LOWER(:pesquisa) "
-                + "     OR LOWER(grupo.nome) LIKE LOWER(:pesquisa)) "
+                + "     OR LOWER(grupo.nome) LIKE LOWER(:pesquisa) "
+                + "     OR LOWER(CONCAT(grupo.codigo, produto.codigo)) LIKE LOWER(:pesquisa)) "
                 + " ORDER BY produtoValor.valor, produto.nome");
         query.setParameter("pesquisa", "%" + pesquisa + "%");
 

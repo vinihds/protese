@@ -1,5 +1,6 @@
 package protese.util.utilidade;
 
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -31,6 +32,8 @@ public class Utilidade {
     private static final DateTimeFormatter dataMYTimeStampLocalDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private static final DateTimeFormatter mesAno = DateTimeFormatter.ofPattern("MMM/yyyy");
+    
+    public static final Font FONTE = new Font("Tahoma", Font.BOLD, 18);
 
     private Utilidade() {
     }

@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import protese.dao.cliente.ClienteDao;
 import protese.model.cliente.Cliente;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -15,11 +16,12 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
 
     private ClienteDao clienteDao = ClienteDao.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
+    private Utilidade utilidade = Utilidade.getInstance();
 
     public FrmGerenciarCliente() {
         initComponents();
-        
-        tblCliente.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+
+        tblCliente.getTableHeader().setFont(utilidade.FONTE);
         modelo = (DefaultTableModel) tblCliente.getModel();
 
         preencherTabela(clienteDao.retornaTodos());
@@ -164,7 +166,7 @@ public class FrmGerenciarCliente extends javax.swing.JFrame {
         FrmCliente frm = new FrmCliente(this, true, new Cliente());
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
-        
+
         btnPesquisarActionPerformed(null);
     }//GEN-LAST:event_btnNovoActionPerformed
 

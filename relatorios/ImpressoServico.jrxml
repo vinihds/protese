@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ImpressoCliente" pageWidth="680" pageHeight="396" whenNoDataType="AllSectionsNoDetail" columnWidth="556" leftMargin="62" rightMargin="62" topMargin="28" bottomMargin="28" uuid="0e8ef20e-6a6a-47de-83bd-71b86f8ee070">
-	<property name="ireport.zoom" value="1.331000000000002"/>
+	<property name="ireport.zoom" value="1.6105100000000026"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="6"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -67,15 +67,23 @@ ORDER BY
 	<parameter name="observacao" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
+		 cabecalho.*,
      to_char(servico.data_referente,'MM/YY') AS "data_servico",
      CONCAT(grupo.codigo,produto.codigo) AS "codigo_produto_valor",
      detalhe."idservico_detalhe",
      detalhe."quantidade",
      produto."nome",
-     detalhe."valor_total"
+     detalhe."valor_total",
+		 enderecoCliente.*
 FROM
      "protese"."servico_detalhe" detalhe
      INNER JOIN "protese"."servico" servico ON detalhe."idservico" = servico."idservico"
+		 INNER JOIN "protese"."cliente" cliente ON servico."idcliente" = cliente."idcliente"
+		 LEFT JOIN "protese"."cabecalhoRelatorio" cabecalho ON 1 = 1
+		 LEFT JOIN "protese"."cliente_endereco" cliente_endereco ON cliente."idcliente" = cliente_endereco."idcliente"
+		 LEFT JOIN "protese"."endereco" enderecoCliente ON cliente_endereco."idendereco" = enderecoCliente."idendereco"
+		 LEFT JOIN "protese"."cliente_contato" cliente_contato ON cliente."idcliente" = cliente_contato."idcliente"
+		 LEFT JOIN "protese"."contato" contatoCliente ON cliente_contato."idcontato" = contatoCliente."idcontato"
      INNER JOIN "protese"."produto_valor" valor ON detalhe."idproduto_valor" = valor."idproduto_valor"
      INNER JOIN "protese"."produto" produto ON valor."idproduto" = produto."idproduto"
      INNER JOIN "protese"."grupo" grupo ON valor."idgrupo" = grupo."idgrupo"
@@ -92,6 +100,15 @@ ORDER BY
 	<field name="quantidade" class="java.lang.Double"/>
 	<field name="nome" class="java.lang.String"/>
 	<field name="valor_total" class="java.lang.Double"/>
+	<field name="idendereco" class="java.lang.Long"/>
+	<field name="logradouro" class="java.lang.String"/>
+	<field name="numero" class="java.lang.String"/>
+	<field name="complemento" class="java.lang.String"/>
+	<field name="bairro" class="java.lang.String"/>
+	<field name="cidade" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="cep" class="java.lang.String"/>
+	<field name="excluido" class="java.lang.Boolean"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -400,7 +417,7 @@ ORDER BY
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{razaoSocial}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[LABORATORIO DE PROTESE DENTARIA]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="277" y="0" width="279" height="15" uuid="9e97620f-6b60-4f72-adfd-eb55353c09dd"/>
@@ -414,7 +431,7 @@ ORDER BY
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{nomeFantasia}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[ANTONIO CELSO BALLARIN]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="277" y="15" width="279" height="15" uuid="c04e373b-bc0f-4c9a-b1db-a1489be5433e"/>
@@ -463,21 +480,21 @@ ORDER BY
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{endereco}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{endereco}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="64" y="62" width="206" height="12" uuid="1b706acf-4995-4d5c-9e61-33842e768516"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{cidade}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cidade}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="64" y="74" width="206" height="12" uuid="1ae02555-7a67-4d0b-aa5e-06e6bd9f758d"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{fone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fone}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="89" width="64" height="12" uuid="1ec78220-6304-4e51-99c7-ff51091ac58b"/>
@@ -505,7 +522,7 @@ ORDER BY
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{cliente}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="64" y="101" width="206" height="12" uuid="60d84dfc-7a32-449d-bec4-7e9dfff1fb79"/>

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import protese.dao.cliente.ClienteDao;
 import protese.model.cliente.Cliente;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -14,6 +15,7 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
 
     private ClienteDao clienteDao = ClienteDao.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
+    private Utilidade utilidade = Utilidade.getInstance();
 
     private Cliente cliente = new Cliente();
 
@@ -21,7 +23,7 @@ public class FrmPesquisarCliente extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        tblCliente.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblCliente.getTableHeader().setFont(utilidade.FONTE);
         preencherTabela(clienteDao.retornaTodos());
     }
 

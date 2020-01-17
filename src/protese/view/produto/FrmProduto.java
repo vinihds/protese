@@ -8,6 +8,7 @@ import protese.dao.produto.ProdutoDao;
 import protese.dao.produto.ProdutoValorDao;
 import protese.model.produto.Produto;
 import protese.model.produto.ProdutoValor;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -19,7 +20,7 @@ public class FrmProduto extends javax.swing.JDialog {
     private ProdutoValorDao produtoValorDao = ProdutoValorDao.getInstance();
 
     private DefaultTableModel modelo = new DefaultTableModel();
-    private DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.00");
+    private Utilidade utilidade = Utilidade.getInstance();
 
     private Produto produto = new Produto();
 
@@ -34,7 +35,7 @@ public class FrmProduto extends javax.swing.JDialog {
 
         this.produto = produto;
         
-        tblValor.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblValor.getTableHeader().setFont(utilidade.FONTE);
 
         if (produto.getId() == null) {
             liberaBotoes(false);
@@ -59,7 +60,7 @@ public class FrmProduto extends javax.swing.JDialog {
                 modelo.addRow(new Object[]{produtoValor.getId(),
                     produtoValor.getIdgrupo().getNome(),
                     produtoValor.getIdgrupo().getCodigo() + produto.getCodigo(),
-                    "R$ " + decimalFormat.format(produtoValor.getValor())});
+                    "R$ " + utilidade.decimalFormat(produtoValor.getValor())});
             }
         }
     }

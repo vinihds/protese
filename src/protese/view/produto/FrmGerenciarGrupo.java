@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import protese.dao.produto.GrupoDao;
 import protese.model.produto.Grupo;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -15,11 +16,13 @@ public class FrmGerenciarGrupo extends javax.swing.JFrame {
 
     private GrupoDao grupoDao = GrupoDao.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
+    
+    private Utilidade utilidade = Utilidade.getInstance();
 
     public FrmGerenciarGrupo() {
         initComponents();
 
-        tblGrupo.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblGrupo.getTableHeader().setFont(utilidade.FONTE);
         preencherTabela(grupoDao.retornaTodos());
     }
 

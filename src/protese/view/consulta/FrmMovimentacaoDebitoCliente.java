@@ -26,7 +26,7 @@ public class FrmMovimentacaoDebitoCliente extends javax.swing.JFrame {
     public FrmMovimentacaoDebitoCliente() {
         initComponents();
 
-        tblDebito.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblDebito.getTableHeader().setFont(utilidade.FONTE);
     }
 
     private void preencheTabela() {

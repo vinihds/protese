@@ -3,6 +3,7 @@ package protese.view.servico;
 import java.awt.Font;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -10,6 +11,7 @@ import protese.dao.cliente.ClienteDao;
 import protese.dao.servico.ServicoDao;
 import protese.model.cliente.Cliente;
 import protese.model.servico.Servico;
+import protese.util.utilidade.Impressao;
 import protese.util.utilidade.Utilidade;
 import protese.view.cliente.FrmPesquisarCliente;
 
@@ -22,11 +24,13 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     private ServicoDao servicoDao = ServicoDao.getInstance();
     private ClienteDao clienteDao = ClienteDao.getInstance();
 
+    private Impressao impressao = Impressao.getInstance();
     private Utilidade utilidade = Utilidade.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
     private List<Cliente> clienteList = new ArrayList();
-    
+
     private Cliente cliente;
+    private HashMap parametros = new HashMap();
 
     public FrmGerenciarServico() {
         initComponents();
@@ -37,40 +41,40 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         preencheMeses();
         preencheAnos();
 
-        tblServicos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
-        
+        tblServicos.getTableHeader().setFont(utilidade.FONTE);
+
         btnPesquisarActionPerformed(null);
     }
 
     private void preencheMeses() {
         LocalDateTime hoje = LocalDateTime.now();
-        
+
         comboReferenteMesInicial.setSelectedIndex(hoje.getMonthValue() - 1);
-        
+
         if (hoje.getMonthValue() == 12) {
             comboReferenteMesFinal.setSelectedIndex(0);
         } else {
             comboReferenteMesFinal.setSelectedIndex(hoje.getMonthValue());
         }
     }
-    
+
     private void preencheAnos() {
         LocalDateTime hoje = LocalDateTime.now();
-        
+
         for (int i = 2018; i <= hoje.getYear() + 1; i++) {
             comboReferenteAnoInicial.addItem("" + i);
             comboReferenteAnoFinal.addItem("" + i);
         }
-        
+
         comboReferenteAnoInicial.setSelectedItem(String.valueOf(hoje.getYear()));
-        
+
         if (hoje.getMonthValue() == 12) {
             comboReferenteAnoFinal.setSelectedItem(String.valueOf(hoje.getYear() + 1));
         } else {
             comboReferenteAnoFinal.setSelectedItem(String.valueOf(hoje.getYear()));
         }
     }
-    
+
     private void preencherTabela(List<Servico> servicoList) {
         modelo = (DefaultTableModel) tblServicos.getModel();
         modelo.setRowCount(0);
@@ -80,7 +84,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
                 servico.getId(),
                 servico.getTitulo(),
                 servico.getIdcliente().getNome(),
-                utilidade.mesAno(servico.getDataReferente()),
+                utilidade.mesAno(servico.getDataReferente()).toUpperCase(),
                 servico.getDataFinalizacao() != null ? "Finalizado!" : "- - - - - - - - -",
                 "R$ " + utilidade.decimalFormat(servico.getValorTotalServico())
             });
@@ -114,6 +118,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         txtNomeCliente = new javax.swing.JTextField();
         btnPesquisarCliente = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gerenciar serviços");
@@ -284,6 +289,16 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         jPanel1.add(btnPesquisarCliente);
         btnPesquisarCliente.setBounds(390, 10, 70, 70);
 
+        btnImprimir.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btnImprimir.setText("Imprimir!");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnImprimir);
+        btnImprimir.setBounds(490, 660, 280, 40);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -308,7 +323,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
                 FrmServico frm = new FrmServico(this, true, servico);
                 frm.setLocationRelativeTo(null);
                 frm.setVisible(true);
-                
+
                 btnPesquisarActionPerformed(null);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -351,7 +366,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         FrmServico frm = new FrmServico(this, true, new Servico());
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
-        
+
         btnPesquisarActionPerformed(null);
     }//GEN-LAST:event_btnNovoActionPerformed
 
@@ -361,12 +376,12 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         int indexFiltro = comboFiltro.getSelectedIndex();
-        
+
         int diaInicial = 1;
         int mesInicial = comboReferenteMesInicial.getSelectedIndex() + 1;
         int anoInicial = Integer.parseInt(comboReferenteAnoInicial.getSelectedItem().toString());
         LocalDateTime dataInicial = LocalDateTime.of(anoInicial, mesInicial, diaInicial, 0, 0, 0);
-        
+
         int diaFinal = 1;
         int mesFinal = comboReferenteMesFinal.getSelectedIndex() + 1;
         int anoFinal = Integer.parseInt(comboReferenteAnoFinal.getSelectedItem().toString());
@@ -377,7 +392,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
             preencherTabela(servicoDao.retornaTodosPorPesquisa(txtPesquisa.getText(), cliente, dataInicial, dataFinal, indexFiltro));
         } catch (Exception e) {
             preencherTabela(servicoDao.retornaTodos());
-            
+
             e.printStackTrace();
         }
     }//GEN-LAST:event_btnPesquisarActionPerformed
@@ -390,10 +405,23 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
         FrmPesquisarCliente frm = new FrmPesquisarCliente(this, true);
         frm.setLocationRelativeTo(null);
         frm.setVisible(true);
-        
+
         this.cliente = frm.getCliente();
         txtNomeCliente.setText(cliente.getNome());
     }//GEN-LAST:event_btnPesquisarClienteActionPerformed
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        int row = tblServicos.getSelectedRow();
+
+        if (row > -1) {
+            parametros = new HashMap();
+            
+            parametros.put("idservico", tblServicos.getValueAt(row, 0).toString());
+            impressao.teste("impressoServico", parametros);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione os serviços para continuar!", "Serviço", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnImprimirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -434,6 +462,7 @@ public class FrmGerenciarServico extends javax.swing.JFrame {
     private javax.swing.JButton btnAlterar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFechar;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnPesquisarCliente;

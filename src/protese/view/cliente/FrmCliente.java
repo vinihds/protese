@@ -13,6 +13,7 @@ import protese.model.cliente.ClienteContato;
 import protese.model.cliente.ClienteEndereco;
 import protese.model.cliente.Contato;
 import protese.model.cliente.Endereco;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -30,6 +31,7 @@ public class FrmCliente extends javax.swing.JDialog {
     private ClienteEndereco clienteEndereco = new ClienteEndereco();
 
     private DefaultTableModel modelo = new DefaultTableModel();
+    private Utilidade utilidade = Utilidade.getInstance();
 
     private FrmCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -42,7 +44,7 @@ public class FrmCliente extends javax.swing.JDialog {
 
         this.cliente = cliente;
         
-        tblContatos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblContatos.getTableHeader().setFont(utilidade.FONTE);
 
         for (ClienteEndereco clienteEndereco : this.cliente.getClienteEnderecoList()) {
             this.clienteEndereco = clienteEndereco;

@@ -23,7 +23,7 @@ public class FrmPesquisarProdutoValor extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        tblProdutoValor.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblProdutoValor.getTableHeader().setFont(utilidade.FONTE);
         preencherTabela(produtoValorDao.retornaTodos());
     }
 

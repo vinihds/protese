@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import protese.dao.produto.ProdutoDao;
 import protese.model.produto.Produto;
+import protese.util.utilidade.Utilidade;
 
 /**
  *
@@ -15,11 +16,13 @@ public class FrmGerenciarProduto extends javax.swing.JFrame {
 
     private ProdutoDao produtoDao = ProdutoDao.getInstance();
     private DefaultTableModel modelo = new DefaultTableModel();
+    
+    private Utilidade utilidade = Utilidade.getInstance();
 
     public FrmGerenciarProduto() {
         initComponents();
 
-        tblProdutos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblProdutos.getTableHeader().setFont(utilidade.FONTE);
         preencheProdutos(produtoDao.retornaTodos());
     }
 

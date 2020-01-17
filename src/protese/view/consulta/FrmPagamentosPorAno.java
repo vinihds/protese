@@ -25,7 +25,7 @@ public class FrmPagamentosPorAno extends javax.swing.JFrame {
     public FrmPagamentosPorAno() {
         initComponents();
 
-        tblPagamentos.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 18));
+        tblPagamentos.getTableHeader().setFont(utilidade.FONTE);
         txtNomeCliente.setEditable(false);
 
         preencheAnos();
@@ -55,7 +55,7 @@ public class FrmPagamentosPorAno extends javax.swing.JFrame {
                 int index = 0;
 
                 for (PagamentoPorMes porMes : pagamentoDao.listagemPagamentoPorAno(cliente, ano).getPagamentoPorMesList()) {
-                    valores[index] = porMes.getValor();
+                    valores[index] = utilidade.decimalFormat(porMes.getValor());
                     valorTotalPago += porMes.getValor();
                     index++;
                 }
@@ -80,7 +80,7 @@ public class FrmPagamentosPorAno extends javax.swing.JFrame {
         btnPesquisarCliente = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         comboAno = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         lblValorTotalPago = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
 
@@ -156,11 +156,11 @@ public class FrmPagamentosPorAno extends javax.swing.JFrame {
         jPanel1.add(comboAno);
         comboAno.setBounds(750, 30, 300, 50);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-print-50.png"))); // NOI18N
-        jButton1.setText("Imprimir!");
-        jPanel1.add(jButton1);
-        jButton1.setBounds(10, 620, 200, 50);
+        btnImprimir.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/protese/util/icons/icons8-print-50.png"))); // NOI18N
+        btnImprimir.setText("Imprimir!");
+        jPanel1.add(btnImprimir);
+        btnImprimir.setBounds(10, 620, 200, 50);
 
         lblValorTotalPago.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         lblValorTotalPago.setForeground(new java.awt.Color(0, 153, 51));
@@ -244,9 +244,9 @@ public class FrmPagamentosPorAno extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFechar;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnPesquisarCliente;
     private javax.swing.JComboBox<String> comboAno;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel8;
